@@ -1,0 +1,53 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="dojosession [clean,package...]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
+    <MavenSettings>
+      <option name="myGeneralSettings">
+        <MavenGeneralSettings>
+          <option name="alwaysUpdateSnapshots" value="false" />
+          <option name="checksumPolicy" value="NOT_SET" />
+          <option name="emulateTerminal" value="false" />
+          <option name="failureBehavior" value="NOT_SET" />
+          <option name="localRepository" value="" />
+          <option name="mavenHome" value="C:/Program Files/apache-maven-3.9.6" />
+          <option name="nonRecursive" value="false" />
+          <option name="outputLevel" value="INFO" />
+          <option name="printErrorStackTraces" value="false" />
+          <option name="showDialogWithAdvancedSettings" value="false" />
+          <option name="threads" />
+          <option name="useMavenConfig" value="true" />
+          <option name="usePluginRegistry" value="false" />
+          <option name="userSettingsFile" value="" />
+          <option name="workOffline" value="false" />
+        </MavenGeneralSettings>
+      </option>
+      <option name="myRunnerSettings" />
+      <option name="myRunnerParameters">
+        <MavenRunnerParameters>
+          <option name="cmdOptions" />
+          <option name="profiles">
+            <set />
+          </option>
+          <option name="goals">
+            <list>
+              <option value="clean" />
+              <option value="package" />
+              <option value="org.codehaus.mojo:wagon-maven-plugin:2.0.2:upload-single" />
+              <option value="-Dwagon.fromFile=target/dojosession.war" />
+              <option value="-Dwagon.url=file://D:\Applications\wildfly-26.1.3.Final\wildfly-26.1.3.Final\standalone\deployments" />
+            </list>
+          </option>
+          <option name="pomFileName" />
+          <option name="profilesMap">
+            <map />
+          </option>
+          <option name="projectsCmdOptionValues">
+            <list />
+          </option>
+          <option name="resolveToWorkspace" value="false" />
+          <option name="workingDirPath" value="$PROJECT_DIR$" />
+        </MavenRunnerParameters>
+      </option>
+    </MavenSettings>
+    <method v="2" />
+  </configuration>
+</component>

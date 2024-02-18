@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Properties>
+        <Property name="basePath">${env:JBOSS_HOME}/customization/logs</Property>
+    </Properties>
+
+    <Appenders>
+        <!-- Rolling File Appender -->
+        <RollingFile name="rollingfile" fileName="${basePath}/agilecourse.log"
+                     filePattern="${basePath}app_%d{yyyyMMdd}.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %level [%t] [%c] [%M] [%l] - %msg%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${basePath}" maxDepth="1">
+                    <IfLastModified age="14d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <!-- Console Appender -->
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} %c{1} - %msg%n" />
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="mr2.meetingroom02.dojosession" level="info" additivity="false">
+            <AppenderRef ref="rollingfile" />
+            <AppenderRef ref="console" />
+        </Logger>
+
+        <Root level="info" additivity="false">
+            <AppenderRef ref="console" />
+        </Root>
+    </Loggers>
+</Configuration>
