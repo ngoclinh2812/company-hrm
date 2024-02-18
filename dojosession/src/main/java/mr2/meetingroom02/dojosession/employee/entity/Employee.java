@@ -1,33 +1,67 @@
 package mr2.meetingroom02.dojosession.employee.entity;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import mr2.meetingroom02.dojosession.assignment.entity.Assignment;
 import mr2.meetingroom02.dojosession.base.entity.BaseEntity;
 import mr2.meetingroom02.dojosession.department.entity.Department;
 
+import javax.json.bind.annotation.JsonbDateFormat;
 import javax.persistence.*;
+import javax.ws.rs.DefaultValue;
 import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Employee extends BaseEntity {
-    private LocalDate dateOfBirth;
+
+    @JsonbDateFormat("yyyy-MM-dd")
+    private LocalDate dateOfBirth;    @Getter
+    private String email;
+    @Getter
+    private String phone;
+
     private String firstName;
     private String gender;
+
     private String lastName;
     private String middleName;
     private int salary;
 
-    @ManyToOne
+    @Column(name = "is_deleted", columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private boolean isDeleted;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="deptid")
     private Department department;
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.MERGE, orphanRemoval = true)
     private List<Assignment> assignmentList;
 
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
 
     public LocalDate getDateOfBirth() {
         return dateOfBirth;
