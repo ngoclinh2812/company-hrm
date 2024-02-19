@@ -1,5 +1,7 @@
 package mr2.meetingroom02.dojosession.employee.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
@@ -13,6 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.LowerCamelCaseStrategy.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EmployeeRequestDTO {
 
     private Long id;
@@ -27,4 +30,5 @@ public class EmployeeRequestDTO {
     private String phone;
     private String gender;
     private int salary;
+    private Integer departmentId;
 }

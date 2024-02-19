@@ -2,10 +2,8 @@ package mr2.meetingroom02.dojosession.employee.rest;
 
 import mr2.meetingroom02.dojosession.employee.dto.EmployeeRequestDTO;
 import mr2.meetingroom02.dojosession.employee.dto.EmployeeResponseDTO;
-import mr2.meetingroom02.dojosession.employee.entity.Employee;
 import mr2.meetingroom02.dojosession.employee.service.EmployeeService;
 import mr2.meetingroom02.dojosession.project.dto.ProjectResponseDTO;
-import mr2.meetingroom02.dojosession.project.entity.Project;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
