@@ -1,5 +1,6 @@
 package mr2.meetingroom02.dojosession.employee.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Builder
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EmployeeResponseDTO implements Serializable {
     private Long id;
     private LocalDate dateOfBirth;

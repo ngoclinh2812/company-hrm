@@ -1,6 +1,9 @@
 package mr2.meetingroom02.dojosession.employee.service;
 
+import com.fasterxml.jackson.databind.util.BeanUtil;
 import mr2.meetingroom02.dojosession.assignment.dao.AssignmentDAO;
+import mr2.meetingroom02.dojosession.department.dao.DepartmentDAO;
+import mr2.meetingroom02.dojosession.department.entity.Department;
 import mr2.meetingroom02.dojosession.employee.dao.EmployeeDAO;
 import mr2.meetingroom02.dojosession.employee.dto.EmployeeRequestDTO;
 import mr2.meetingroom02.dojosession.employee.dto.EmployeeResponseDTO;
@@ -31,10 +34,13 @@ public class EmployeeService {
     @Inject
     private AssignmentDAO assignmentDAO;
 
+    @Inject
+    private DepartmentDAO departmentDAO;
+
     private static final Logger logger = LogManager.getLogger(EmployeeService.class);
 
     public List<EmployeeResponseDTO> getAllEmployees() {
-        List<Employee> employees = employeeDAO.findAll();
+        List<Employee> employees = employeeDAO.getAllExceptDeleted();
         List<EmployeeResponseDTO> responseDTOList = employees.stream()
                 .map(EmployeeResponseDTO::fromEntity)
                 .collect(Collectors.toList());
@@ -52,6 +58,14 @@ public class EmployeeService {
 
     public void add(EmployeeRequestDTO employeeRequestDTO) {
 
+        Optional<Department> optionalDepartment = departmentDAO.findById(employeeRequestDTO.getDepartmentId());
+
+        if (!optionalDepartment.isPresent()) {
+            //TODO: Throw exception: No department selected
+        }
+
+        Department department = optionalDepartment.get();
+
         Employee newEmployee = Employee.builder()
                 .dateOfBirth(employeeRequestDTO.getDateOfBirth())
                 .gender(employeeRequestDTO.getGender())
@@ -59,6 +73,10 @@ public class EmployeeService {
                 .firstName(employeeRequestDTO.getFirstName())
                 .middleName(employeeRequestDTO.getMiddleName())
                 .lastName(employeeRequestDTO.getLastName())
+                .email(employeeRequestDTO.getEmail())
+                .phone(employeeRequestDTO.getPhone())
+                .department(department)
+                .isDeleted(false)
                 .build();
 
         employeeDAO.add(newEmployee);

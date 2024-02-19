@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import mr2.meetingroom02.dojosession.assignment.entity.Assignment;
 import mr2.meetingroom02.dojosession.base.entity.BaseEntity;
 import mr2.meetingroom02.dojosession.department.entity.Department;
 
@@ -24,28 +23,21 @@ import java.util.List;
 public class Employee extends BaseEntity {
 
     @JsonbDateFormat("yyyy-MM-dd")
-    private LocalDate dateOfBirth;    @Getter
+    private LocalDate dateOfBirth;
     private String email;
-    @Getter
     private String phone;
-
     private String firstName;
     private String gender;
-
     private String lastName;
     private String middleName;
     private int salary;
 
     @Column(name = "is_deleted", columnDefinition = "BOOLEAN DEFAULT FALSE")
-    private boolean isDeleted;
+    private Boolean isDeleted = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="deptid")
     private Department department;
-
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.MERGE, orphanRemoval = true)
-    private List<Assignment> assignmentList;
-
 
     public void setEmail(String email) {
         this.email = email;
@@ -119,11 +111,4 @@ public class Employee extends BaseEntity {
         this.department = department;
     }
 
-    public List<Assignment> getAssignmentList() {
-        return assignmentList;
-    }
-
-    public void setAssignmentList(List<Assignment> assignmentList) {
-        this.assignmentList = assignmentList;
-    }
 }
