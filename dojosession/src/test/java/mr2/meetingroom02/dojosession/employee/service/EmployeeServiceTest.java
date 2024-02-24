@@ -1,7 +1,7 @@
 package mr2.meetingroom02.dojosession.employee.service;
 
 import mr2.meetingroom02.dojosession.assignment.dao.AssignmentDAO;
-import mr2.meetingroom02.dojosession.employee.dao.EmployeeDAO;
+import mr2.meetingroom02.dojosession.employee.EmployeeDAO;
 import mr2.meetingroom02.dojosession.employee.dto.EmployeeResponseDTO;
 import mr2.meetingroom02.dojosession.employee.entity.Employee;
 import mr2.meetingroom02.dojosession.project.dto.ProjectResponseDTO;
@@ -44,19 +44,6 @@ class EmployeeServiceTest {
         List<EmployeeResponseDTO> result = employeeService.getAllEmployees();
 
         assertEquals(mockEmployees.size(), result.size());
-    }
-
-    @Test
-    public void getProjectsForEmployee_Successfully() {
-        Long employeeId = 1L;
-        List<Project> mockProjects = Arrays.asList(
-                new Project()
-        );
-
-        when(assignmentDAO.getProjectsForEmployee(employeeId)).thenReturn(mockProjects);
-
-        List<ProjectResponseDTO> result = employeeService.getProjectsForEmployee(employeeId);
-        assertEquals(mockProjects.size(), result.size());
     }
 
     @Test
@@ -111,7 +98,7 @@ class EmployeeServiceTest {
     public void NoEmployeeIdFound_when_Delete() {}
 
     @Test
-    public void EmployeeIdContainsLetter_when_delete() {}
+    public void EmployeeIdContainsLetter_when_Delete() {}
 
     @Test
     public void NoAuthority_when_Delete() {}

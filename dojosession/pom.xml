@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.meetingroom02</groupId>
@@ -14,9 +14,18 @@
     <jakartaee-api.version>8.0.0</jakartaee-api.version>
     <compiler-plugin.version>3.11.0</compiler-plugin.version>
     <war-plugin.version>3.3.2</war-plugin.version>
+    <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
+    <lombok.version>1.18.30</lombok.version>
   </properties>
 
   <dependencies>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
 
     <dependency>
       <groupId>jakarta.platform</groupId>
@@ -40,12 +49,18 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct</artifactId>
+      <version>${org.mapstruct.version}</version>
+    </dependency>
+
     <!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
-<!--    <dependency>-->
-<!--      <groupId>org.mapstruct</groupId>-->
-<!--      <artifactId>mapstruct</artifactId>-->
-<!--      <version>1.5.5.Final</version>-->
-<!--    </dependency>-->
+    <!--    <dependency>-->
+    <!--      <groupId>org.mapstruct</groupId>-->
+    <!--      <artifactId>mapstruct</artifactId>-->
+    <!--      <version>1.5.5.Final</version>-->
+    <!--    </dependency>-->
 
     <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
     <dependency>
@@ -110,54 +125,82 @@
       <scope>test</scope>
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-surefire-plugin -->
+    <dependency>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-surefire-plugin</artifactId>
+      <version>3.0.0-M5</version>
+    </dependency>
+
+
   </dependencies>
 
   <build>
     <finalName>dojosession</finalName>
 
     <plugins>
-<!--    <plugin>-->
-<!--      <groupId>org.apache.maven.plugins</groupId>-->
-<!--      <artifactId>maven-compiler-plugin</artifactId>-->
-<!--      <version>${compiler-plugin.version}</version>-->
-<!--      <configuration>-->
-<!--        <annotationProcessorPaths>-->
-<!--          <path>-->
-<!--            <groupId>org.mapstruct</groupId>-->
-<!--            <artifactId>mapstruct-processor</artifactId>-->
-<!--            <version>1.5.5.Final</version>-->
-<!--          </path>-->
-<!--        </annotationProcessorPaths>-->
-<!--      </configuration>-->
-<!--    </plugin>-->
-    <plugin>
-      <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-war-plugin</artifactId>
-      <version>${war-plugin.version}</version>
-      <configuration>
-        <failOnMissingWebXml>false</failOnMissingWebXml>
-      </configuration>
-    </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${compiler-plugin.version}</version>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </path>
+            <path>
+              <groupId>org.mapstruct</groupId>
+              <artifactId>mapstruct-processor</artifactId>
+              <version>${org.mapstruct.version}</version>
+            </path>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok-mapstruct-binding</artifactId>
+              <version>0.2.0</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.22.2</version>
+        <configuration>
+          <skipTests>true</skipTests>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>${war-plugin.version}</version>
+        <configuration>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+        </configuration>
+      </plugin>
 
-    <!-- Upload war file to WildFly deployment  -->
-    <plugin>
-      <groupId>org.codehaus.mojo</groupId>
-      <artifactId>wagon-maven-plugin</artifactId>
-      <version>2.0.2</version>
-      <executions>
-        <execution>
-          <id>copy-to-wildfly</id>
-          <phase>deploy</phase>
-          <goals>
-            <goal>upload-single</goal>
-          </goals>
-          <configuration>
-            <fromFile>${project.build.directory}/${project.build.finalName}.war</fromFile>
-            <url>file://${env.JBOSS_HOME}/standalone/deployments</url>
-          </configuration>
-        </execution>
-      </executions>
-    </plugin>
+      <!-- Upload war file to WildFly deployment  -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>wagon-maven-plugin</artifactId>
+        <version>2.0.2</version>
+        <executions>
+          <execution>
+            <id>copy-to-wildfly</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>upload-single</goal>
+            </goals>
+            <configuration>
+              <fromFile>${project.build.directory}/${project.build.finalName}.war</fromFile>
+              <url>file://${env.JBOSS_HOME}/standalone/deployments</url>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 </project>

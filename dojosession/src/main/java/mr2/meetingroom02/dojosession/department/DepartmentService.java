@@ -1,9 +1,8 @@
-package mr2.meetingroom02.dojosession.department.service;
+package mr2.meetingroom02.dojosession.department;
 
-import mr2.meetingroom02.dojosession.department.dao.DepartmentDAO;
+import mr2.meetingroom02.dojosession.department.dto.DepartmentDTO;
 import mr2.meetingroom02.dojosession.department.entity.Department;
-import mr2.meetingroom02.dojosession.department.entity.DepartmentDTO;
-import mr2.meetingroom02.dojosession.employee.dao.EmployeeDAO;
+import mr2.meetingroom02.dojosession.employee.EmployeeDAO;
 import mr2.meetingroom02.dojosession.employee.dto.EmployeeResponseDTO;
 import mr2.meetingroom02.dojosession.employee.entity.Employee;
 

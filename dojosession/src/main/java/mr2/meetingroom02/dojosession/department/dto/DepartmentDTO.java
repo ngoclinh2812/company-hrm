@@ -1,4 +1,4 @@
-package mr2.meetingroom02.dojosession.department.entity;
+package mr2.meetingroom02.dojosession.department.dto;
 
 import lombok.Builder;
 import lombok.Getter;

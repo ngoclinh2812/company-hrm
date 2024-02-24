@@ -1,6 +1,5 @@
 package mr2.meetingroom02.dojosession.employee.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -16,9 +15,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.LowerCamelCaseStrategy.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class EmployeeRequestDTO {
-
-    private Long id;
+public class EmployeeCreateRequestDTO {
 
     @JsonbDateFormat("yyyy-MM-dd")
     private LocalDate dateOfBirth;
