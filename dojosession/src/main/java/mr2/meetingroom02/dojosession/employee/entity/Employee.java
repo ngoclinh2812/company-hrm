@@ -2,15 +2,13 @@ package mr2.meetingroom02.dojosession.employee.entity;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import mr2.meetingroom02.dojosession.base.entity.BaseEntity;
 import mr2.meetingroom02.dojosession.department.entity.Department;
 
 import javax.json.bind.annotation.JsonbDateFormat;
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.ws.rs.DefaultValue;
 import java.time.LocalDate;
 import java.util.List;
@@ -19,17 +17,32 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Builder
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Employee extends BaseEntity {
 
     @JsonbDateFormat("yyyy-MM-dd")
     private LocalDate dateOfBirth;
+
+    @Column(unique = true)
+    @NonNull
     private String email;
+
+    @Column(unique = true)
     private String phone;
+
+    @Column
     private String firstName;
+
+    @Column
     private String gender;
+
+    @Column
     private String lastName;
+
+    @Column
     private String middleName;
+
+    @Column
+    @Min(0)
     private int salary;
 
     @Column(name = "is_deleted", columnDefinition = "BOOLEAN DEFAULT FALSE")

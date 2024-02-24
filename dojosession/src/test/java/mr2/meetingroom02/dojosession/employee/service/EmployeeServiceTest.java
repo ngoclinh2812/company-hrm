@@ -1,7 +1,7 @@
 package mr2.meetingroom02.dojosession.employee.service;
 
 import mr2.meetingroom02.dojosession.assignment.dao.AssignmentDAO;
-import mr2.meetingroom02.dojosession.employee.dao.EmployeeDAO;
+import mr2.meetingroom02.dojosession.employee.EmployeeDAO;
 import mr2.meetingroom02.dojosession.employee.dto.EmployeeResponseDTO;
 import mr2.meetingroom02.dojosession.employee.entity.Employee;
 import mr2.meetingroom02.dojosession.project.dto.ProjectResponseDTO;
@@ -111,7 +111,7 @@ class EmployeeServiceTest {
     public void NoEmployeeIdFound_when_Delete() {}
 
     @Test
-    public void EmployeeIdContainsLetter_when_delete() {}
+    public void EmployeeIdContainsLetter_when_Delete() {}
 
     @Test
     public void NoAuthority_when_Delete() {}

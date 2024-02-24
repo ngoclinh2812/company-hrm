@@ -14,9 +14,18 @@
     <jakartaee-api.version>8.0.0</jakartaee-api.version>
     <compiler-plugin.version>3.11.0</compiler-plugin.version>
     <war-plugin.version>3.3.2</war-plugin.version>
+    <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
+    <lombok.version>1.18.30</lombok.version>
   </properties>
 
   <dependencies>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
 
     <dependency>
       <groupId>jakarta.platform</groupId>
@@ -38,6 +47,12 @@
       <artifactId>lombok</artifactId>
       <version>1.18.30</version>
       <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct</artifactId>
+      <version>${org.mapstruct.version}</version>
     </dependency>
 
     <!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
@@ -116,20 +131,32 @@
     <finalName>dojosession</finalName>
 
     <plugins>
-<!--    <plugin>-->
-<!--      <groupId>org.apache.maven.plugins</groupId>-->
-<!--      <artifactId>maven-compiler-plugin</artifactId>-->
-<!--      <version>${compiler-plugin.version}</version>-->
-<!--      <configuration>-->
-<!--        <annotationProcessorPaths>-->
-<!--          <path>-->
-<!--            <groupId>org.mapstruct</groupId>-->
-<!--            <artifactId>mapstruct-processor</artifactId>-->
-<!--            <version>1.5.5.Final</version>-->
-<!--          </path>-->
-<!--        </annotationProcessorPaths>-->
-<!--      </configuration>-->
-<!--    </plugin>-->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${compiler-plugin.version}</version>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </path>
+            <path>
+              <groupId>org.mapstruct</groupId>
+              <artifactId>mapstruct-processor</artifactId>
+              <version>${org.mapstruct.version}</version>
+            </path>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok-mapstruct-binding</artifactId>
+              <version>0.2.0</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
+      </plugin>
     <plugin>
       <groupId>org.apache.maven.plugins</groupId>
       <artifactId>maven-war-plugin</artifactId>
