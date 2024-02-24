@@ -1,8 +1,7 @@
 package mr2.meetingroom02.dojosession.employee;
 
-import mr2.meetingroom02.dojosession.employee.dto.EmployeeResponseDTO;
-import mr2.meetingroom02.dojosession.employee.entity.Employee;
 import mr2.meetingroom02.dojosession.base.dao.BaseDAO;
+import mr2.meetingroom02.dojosession.employee.entity.Employee;
 
 import javax.ejb.Stateless;
 import javax.persistence.Query;

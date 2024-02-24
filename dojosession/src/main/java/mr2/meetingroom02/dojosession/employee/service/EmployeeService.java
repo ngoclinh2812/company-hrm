@@ -8,8 +8,6 @@ import mr2.meetingroom02.dojosession.employee.dto.EmployeeCreateRequestDTO;
 import mr2.meetingroom02.dojosession.employee.dto.EmployeeResponseDTO;
 import mr2.meetingroom02.dojosession.employee.dto.EmployeeUpdateRequestDTO;
 import mr2.meetingroom02.dojosession.employee.entity.Employee;
-import mr2.meetingroom02.dojosession.project.dto.ProjectResponseDTO;
-import mr2.meetingroom02.dojosession.project.entity.Project;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,7 +16,6 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Stateless
 public class EmployeeService {
@@ -30,9 +27,6 @@ public class EmployeeService {
     private EmployeeDAO employeeDAO;
 
     @Inject
-    private AssignmentDAO assignmentDAO;
-
-    @Inject
     private DepartmentDAO departmentDAO;
 
     @Inject
@@ -41,17 +35,7 @@ public class EmployeeService {
     private static final Logger logger = LogManager.getLogger(EmployeeService.class);
 
     public List<EmployeeResponseDTO> getAllEmployees() {
-        List<Employee> employees = employeeDAO.getAllExceptDeleted();
-        List<EmployeeResponseDTO> responseDTOList = employeeMapper.toListEmployeeDTO(employees);
-        return responseDTOList;
-    }
-
-    public List<ProjectResponseDTO> getProjectsForEmployee(Long employeeId) {
-        List<Project> projects = assignmentDAO.getProjectsForEmployee(employeeId);
-        List<ProjectResponseDTO> projectResponseDTOList = projects.stream()
-                .map(ProjectResponseDTO::fromEntity)
-                .collect(Collectors.toList());
-        return projectResponseDTOList;
+        return employeeMapper.toEmployeeDTOList(employeeDAO.getAllExceptDeleted());
     }
 
     public EmployeeResponseDTO add(EmployeeCreateRequestDTO employeeCreateRequestDTO) {
@@ -76,14 +60,14 @@ public class EmployeeService {
         return employeeMapper.toEmployeeDTO(savedEmp);
     }
 
-    public void update(EmployeeUpdateRequestDTO dto) {
+    public Employee update(EmployeeUpdateRequestDTO dto) {
         Employee employee = employeeDAO.findById(dto.getId()).orElseThrow();
         Employee updatedEmployee = employeeMapper.toUpdatesEntity(dto);
-        employeeDAO.update(updatedEmployee);
+        return employeeDAO.update(updatedEmployee);
     }
 
     public void remove(Long employeeId) {
-        Employee employee = employeeDAO.findById(employeeId).orElseThrow();
+        Employee employee = employeeDAO.findById(employeeId).orElseThrow(); //TODO:L Throw exception not found, not null
         employee.setDeleted(true);
         employeeDAO.update(employee);
     }

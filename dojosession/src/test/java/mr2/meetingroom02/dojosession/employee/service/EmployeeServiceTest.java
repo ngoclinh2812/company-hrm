@@ -47,19 +47,6 @@ class EmployeeServiceTest {
     }
 
     @Test
-    public void getProjectsForEmployee_Successfully() {
-        Long employeeId = 1L;
-        List<Project> mockProjects = Arrays.asList(
-                new Project()
-        );
-
-        when(assignmentDAO.getProjectsForEmployee(employeeId)).thenReturn(mockProjects);
-
-        List<ProjectResponseDTO> result = employeeService.getProjectsForEmployee(employeeId);
-        assertEquals(mockProjects.size(), result.size());
-    }
-
-    @Test
     public void getEmptyEmployeeList() {}
 
     @Test

@@ -27,5 +27,4 @@ public class Department extends BaseEntity {
 
     @OneToMany(mappedBy = "department", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Employee> employees;
-
 }

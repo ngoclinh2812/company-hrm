@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.meetingroom02</groupId>
@@ -56,11 +56,11 @@
     </dependency>
 
     <!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
-<!--    <dependency>-->
-<!--      <groupId>org.mapstruct</groupId>-->
-<!--      <artifactId>mapstruct</artifactId>-->
-<!--      <version>1.5.5.Final</version>-->
-<!--    </dependency>-->
+    <!--    <dependency>-->
+    <!--      <groupId>org.mapstruct</groupId>-->
+    <!--      <artifactId>mapstruct</artifactId>-->
+    <!--      <version>1.5.5.Final</version>-->
+    <!--    </dependency>-->
 
     <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
     <dependency>
@@ -125,6 +125,14 @@
       <scope>test</scope>
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-surefire-plugin -->
+    <dependency>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-surefire-plugin</artifactId>
+      <version>3.0.0-M5</version>
+    </dependency>
+
+
   </dependencies>
 
   <build>
@@ -157,34 +165,42 @@
           </annotationProcessorPaths>
         </configuration>
       </plugin>
-    <plugin>
-      <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-war-plugin</artifactId>
-      <version>${war-plugin.version}</version>
-      <configuration>
-        <failOnMissingWebXml>false</failOnMissingWebXml>
-      </configuration>
-    </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.22.2</version>
+        <configuration>
+          <skipTests>true</skipTests>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>${war-plugin.version}</version>
+        <configuration>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+        </configuration>
+      </plugin>
 
-    <!-- Upload war file to WildFly deployment  -->
-    <plugin>
-      <groupId>org.codehaus.mojo</groupId>
-      <artifactId>wagon-maven-plugin</artifactId>
-      <version>2.0.2</version>
-      <executions>
-        <execution>
-          <id>copy-to-wildfly</id>
-          <phase>deploy</phase>
-          <goals>
-            <goal>upload-single</goal>
-          </goals>
-          <configuration>
-            <fromFile>${project.build.directory}/${project.build.finalName}.war</fromFile>
-            <url>file://${env.JBOSS_HOME}/standalone/deployments</url>
-          </configuration>
-        </execution>
-      </executions>
-    </plugin>
+      <!-- Upload war file to WildFly deployment  -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>wagon-maven-plugin</artifactId>
+        <version>2.0.2</version>
+        <executions>
+          <execution>
+            <id>copy-to-wildfly</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>upload-single</goal>
+            </goals>
+            <configuration>
+              <fromFile>${project.build.directory}/${project.build.finalName}.war</fromFile>
+              <url>file://${env.JBOSS_HOME}/standalone/deployments</url>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 </project>

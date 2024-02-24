@@ -1,17 +1,16 @@
 package mr2.meetingroom02.dojosession.employee.entity;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import mr2.meetingroom02.dojosession.base.entity.BaseEntity;
 import mr2.meetingroom02.dojosession.department.entity.Department;
 
 import javax.json.bind.annotation.JsonbDateFormat;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
-import javax.ws.rs.DefaultValue;
 import java.time.LocalDate;
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor

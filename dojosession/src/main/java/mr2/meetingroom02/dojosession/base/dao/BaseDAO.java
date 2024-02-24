@@ -1,7 +1,6 @@
 package mr2.meetingroom02.dojosession.base.dao;
 
 
-import lombok.RequiredArgsConstructor;
 import mr2.meetingroom02.dojosession.base.entity.BaseEntity;
 
 import javax.persistence.EntityManager;

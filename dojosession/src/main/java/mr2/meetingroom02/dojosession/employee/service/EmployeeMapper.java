@@ -3,6 +3,9 @@ package mr2.meetingroom02.dojosession.employee.service;
 import mr2.meetingroom02.dojosession.employee.dto.EmployeeResponseDTO;
 import mr2.meetingroom02.dojosession.employee.dto.EmployeeUpdateRequestDTO;
 import mr2.meetingroom02.dojosession.employee.entity.Employee;
+import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
+import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
@@ -16,7 +19,7 @@ public interface EmployeeMapper {
 
     EmployeeResponseDTO toEmployeeDTO(Employee employee);
 
-    List<EmployeeResponseDTO> toListEmployeeDTO(List<Employee> employees);
+    List<EmployeeResponseDTO> toEmployeeDTOList(List<Employee> employees);
 
     Employee toUpdatesEntity (EmployeeUpdateRequestDTO dto);
 }

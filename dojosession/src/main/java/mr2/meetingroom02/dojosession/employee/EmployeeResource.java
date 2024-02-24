@@ -4,7 +4,6 @@ import mr2.meetingroom02.dojosession.employee.dto.EmployeeCreateRequestDTO;
 import mr2.meetingroom02.dojosession.employee.dto.EmployeeResponseDTO;
 import mr2.meetingroom02.dojosession.employee.dto.EmployeeUpdateRequestDTO;
 import mr2.meetingroom02.dojosession.employee.service.EmployeeService;
-import mr2.meetingroom02.dojosession.project.dto.ProjectResponseDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,6 +17,8 @@ import java.util.List;
 @Path("employees")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+//TODO: 401, 500, 403, 404 - create and test exceptions one by one, entity Not Found, bad request, internal server error
+//TODO: Practice Query Param (paging)
 public class EmployeeResource {
 
     @Inject
@@ -26,31 +27,19 @@ public class EmployeeResource {
     private static final Logger logger = LogManager.getLogger(EmployeeResource.class);
 
     @GET
-    @Path("")
     public Response getAllEmployees() {
         logger.info("Attempting to get all employees");
         List<EmployeeResponseDTO> employeeList = employeeService.getAllEmployees();
         return Response.ok().entity(employeeList).build();
     }
 
-    @GET
-    @Path("/{employeeId}/projects")
-    public Response getProjectsForEmployee(@PathParam("employeeId") Long employeeId) {
-        List<ProjectResponseDTO> projects = employeeService.getProjectsForEmployee(employeeId);
-
-        if (projects != null) {
-            return Response.ok(projects).build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).entity("Employee not found").build();
-        }
-    }
-
     @POST
     @Path("")
+    //TODO: bad request (?)
     public Response addNewEmployee(@Valid EmployeeCreateRequestDTO employeeCreateRequestDTO) {
-
         employeeService.add(employeeCreateRequestDTO);
-
+        //TODO: return uri in header (reference in agile skills)
+        //TODO: Add exception
         return Response.ok().entity(
                 "Create employee successfully."
         ).build();
@@ -59,14 +48,13 @@ public class EmployeeResource {
     @PUT
     @Path("/{empId}")
     public Response updateEmployee(@Valid EmployeeUpdateRequestDTO dto) {
-        employeeService.update(dto);
-        return Response.ok().entity("Update employee successfully").build();
+        return Response.ok().entity(employeeService.update(dto)).build();
     }
 
     @DELETE
     @Path("/{employeeId}")
     public Response deleteEmployee(@PathParam("employeeId") Long employeeId) {
         employeeService.remove(employeeId);
-        return Response.ok().entity("Remove employee successfully").build();
+        return Response.noContent().build();
     }
 }
