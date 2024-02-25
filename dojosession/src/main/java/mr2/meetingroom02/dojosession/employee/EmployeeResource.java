@@ -34,7 +34,6 @@ public class EmployeeResource {
     }
 
     @POST
-    @Path("")
     //TODO: bad request (?)
     public Response addNewEmployee(@Valid EmployeeCreateRequestDTO employeeCreateRequestDTO) {
         employeeService.add(employeeCreateRequestDTO);

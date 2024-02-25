@@ -48,7 +48,7 @@ public class Employee extends BaseEntity {
     private Boolean isDeleted = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="deptid")
+    @JoinColumn(name="department_id")
     private Department department;
 
     public void setEmail(String email) {
