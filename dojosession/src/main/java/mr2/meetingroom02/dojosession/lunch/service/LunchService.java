@@ -15,7 +15,6 @@ import org.hibernate.MappingException;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.rmi.ConnectIOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,7 +35,7 @@ public class LunchService {
     @Inject
     private LunchMapper lunchMapper;
 
-    public LunchScheduleResponseDTO createLunchSchedule(CreateLunchScheduleDTO scheduleDTO) throws InternalError, MappingException,  {
+    public LunchScheduleResponseDTO createLunchSchedule(CreateLunchScheduleDTO scheduleDTO) throws InternalError, MappingException  {
         LunchSchedule lunchSchedule = LunchSchedule.builder()
                 .startDate(scheduleDTO.getStartDate())
                 .endDate(scheduleDTO.getEndDate())
