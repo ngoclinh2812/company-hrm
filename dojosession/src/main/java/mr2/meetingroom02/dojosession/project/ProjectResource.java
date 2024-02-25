@@ -19,12 +19,12 @@ public class ProjectResource {
     private ProjectService projectService;
 
     @GET
-    @Path("/{employeeId}/projects") //TODO: put in the Project resource
+    @Path("/{employeeId}/projects")
     public Response getProjectsForEmployee(@PathParam("employeeId") Long employeeId)
             throws javax.ws.rs.NotFoundException, NotFoundException {
         List<ProjectResponseDTO> projects = projectService.getProjectsForEmployee(employeeId);
         return Response.ok(projects).build();
-        }
+    }
 }
 
 
