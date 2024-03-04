@@ -15,6 +15,7 @@ import org.hibernate.MappingException;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +36,7 @@ public class LunchService {
     @Inject
     private LunchMapper lunchMapper;
 
+    @Transactional
     public LunchScheduleResponseDTO createLunchSchedule(CreateLunchScheduleDTO scheduleDTO) throws InternalError, MappingException  {
         LunchSchedule lunchSchedule = LunchSchedule.builder()
                 .startDate(scheduleDTO.getStartDate())
@@ -47,8 +49,10 @@ public class LunchService {
 
         List<Menu> menuList = lunchMapper.toMenuEntityList(menuDTOS);
 
-        for (int i = 0; i < menuList.size(); i++) {
-            menuDAO.add(menuList.get(i));
+        if (menuList != null) {
+            for (int i = 0; i < menuList.size(); i++) {
+                menuDAO.add(menuList.get(i));
+            }
         }
 
         List<MealDTO> mealDTOS = menuDTOS.stream()
@@ -64,5 +68,22 @@ public class LunchService {
         LunchScheduleResponseDTO lunchScheduleResponseDTO = lunchMapper.toLunchScheduleDTO(savedSchedule);
 
         return lunchScheduleResponseDTO;
+    }
+
+    public LunchScheduleResponseDTO getLunchScheduleById(Long scheduleId) {
+        LunchSchedule lunchSchedule = lunchScheduleDAO.getScheduleLunch(scheduleId);
+
+        if (lunchSchedule != null) {
+            List<Menu> menus = menuDAO.getAllByLunchScheduleId(lunchSchedule.getId());
+
+            for (Menu menu : menus) {
+                List<Meal> meals = mealDAO.getMealByMenuId(menu.getId());
+                menu.setMealList(meals);
+            }
+
+            lunchSchedule.setMenuList(menus);
+        }
+
+        return lunchMapper.toLunchScheduleDTO(lunchSchedule);
     }
 }

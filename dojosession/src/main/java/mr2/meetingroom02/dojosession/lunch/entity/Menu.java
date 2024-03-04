@@ -21,12 +21,7 @@ public class Menu extends BaseEntity {
     @JoinColumn(name = "menu_schedule_id")
     private LunchSchedule lunchSchedule;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "menu_meal",
-            joinColumns = { @JoinColumn(name = "menu_id")},
-            inverseJoinColumns = { @JoinColumn(name = "meal_id") }
-    )
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "menu")
     private List<Meal> mealList;
 
 }
