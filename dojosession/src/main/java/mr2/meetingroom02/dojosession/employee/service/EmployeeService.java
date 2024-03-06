@@ -34,8 +34,8 @@ public class EmployeeService {
 
     private static final Logger logger = LogManager.getLogger(EmployeeService.class);
 
-    public List<EmployeeResponseDTO> getAllEmployees() {
-        return employeeMapper.toEmployeeDTOList(employeeDAO.getAllExceptDeleted());
+    public List<EmployeeResponseDTO> getAllEmployees(int pageSize) {
+        return employeeMapper.toEmployeeDTOList(employeeDAO.getAllExceptDeleted(pageSize));
     }
 
     public EmployeeResponseDTO add(EmployeeCreateRequestDTO employeeCreateRequestDTO) {

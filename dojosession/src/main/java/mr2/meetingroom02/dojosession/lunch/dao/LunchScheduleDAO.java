@@ -7,6 +7,7 @@ import mr2.meetingroom02.dojosession.lunch.entity.LunchSchedule;
 
 import javax.ejb.Stateless;
 import javax.persistence.*;
+import java.util.stream.Collectors;
 
 @Stateless
 public class LunchScheduleDAO extends BaseDAO<LunchSchedule> {
@@ -19,11 +20,22 @@ public class LunchScheduleDAO extends BaseDAO<LunchSchedule> {
     }
 
     public LunchSchedule getScheduleLunch(Long scheduleId) throws NoResultException {
-        TypedQuery<LunchSchedule> query = entityManager.createQuery("" +
-                "SELECT ls FROM LunchSchedule ls WHERE ls.id = :id", LunchSchedule.class)
+        TypedQuery<LunchSchedule> query = entityManager.createQuery("SELECT ls FROM LunchSchedule ls WHERE ls.id = :id", LunchSchedule.class)
                 .setParameter("id", scheduleId);
         return query.getSingleResult();
     }
+
+//    public LunchSchedule getScheduleLunch(Long scheduleId) throws NoResultException {
+//        TypedQuery<LunchSchedule> query = entityManager.createQuery("SELECT ls.id, ls.startDate, ls.endDate, m.date, me.name " +
+//                        "FROM LunchSchedule ls " +
+//                        "LEFT JOIN ls.menuList m " +
+//                        "LEFT JOIN m.mealList me " +
+//                        "WHERE ls.id = :id", LunchSchedule.class)
+//                .setParameter("id", scheduleId);
+//        return query.getResultList().stream()
+//                .map()
+//                .collect(Collectors.toList());
+//    }
 
 
         public LunchScheduleResponseDTO getScheduleLunchWithDTO(Long scheduleId) throws NoResultException {

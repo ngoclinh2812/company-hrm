@@ -27,9 +27,10 @@ public class EmployeeResource {
     private static final Logger logger = LogManager.getLogger(EmployeeResource.class);
 
     @GET
-    public Response getAllEmployees() {
+    public Response getAllEmployees(@QueryParam("page") int page,
+                                    @QueryParam("pageSize") int pageSize) {
         logger.info("Attempting to get all employees");
-        List<EmployeeResponseDTO> employeeList = employeeService.getAllEmployees();
+        List<EmployeeResponseDTO> employeeList = employeeService.getAllEmployees(pageSize);
         return Response.ok().entity(employeeList).build();
     }
 

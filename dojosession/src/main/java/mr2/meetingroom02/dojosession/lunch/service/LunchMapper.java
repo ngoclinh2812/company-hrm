@@ -21,4 +21,10 @@ public interface LunchMapper {
     List<Meal> toMealEntityList(List<MealDTO> mealDTOS);
 
     LunchScheduleResponseDTO toLunchScheduleDTO(LunchSchedule savedSchedule);
+
+    List<MenuDTO> toMenuDTOs (List<Menu> menus);
+
+    List<MealDTO> toMealDTOs (List<Meal> meals);
+
+    Meal toMealEntity(MealDTO mealDTO);
 }

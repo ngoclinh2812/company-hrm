@@ -38,52 +38,31 @@ public class LunchService {
 
     @Transactional
     public LunchScheduleResponseDTO createLunchSchedule(CreateLunchScheduleDTO scheduleDTO) throws InternalError, MappingException  {
-        LunchSchedule lunchSchedule = LunchSchedule.builder()
-                .startDate(scheduleDTO.getStartDate())
-                .endDate(scheduleDTO.getEndDate())
-                .build();
 
-        LunchSchedule savedSchedule = lunchScheduleDAO.add(lunchSchedule);
+        LunchSchedule lunchSchedule = lunchMapper.toScheduleEntity(scheduleDTO);
 
-        List<MenuDTO> menuDTOS = scheduleDTO.getMenuList();
+        lunchSchedule.getMenuList().forEach(menu -> {
+                menu.setLunchSchedule(lunchSchedule);
+                menu.getMeals().forEach(meal -> meal.setMenu(menu));
+        });
 
-        List<Menu> menuList = lunchMapper.toMenuEntityList(menuDTOS);
+        LunchSchedule savedLunchSchedule = lunchScheduleDAO.add(lunchSchedule);
 
-        if (menuList != null) {
-            for (int i = 0; i < menuList.size(); i++) {
-                menuDAO.add(menuList.get(i));
-            }
-        }
-
-        List<MealDTO> mealDTOS = menuDTOS.stream()
-                .flatMap(menuDTO -> menuDTO.getMeals().stream())
-                .collect(Collectors.toList());
-
-        List<Meal> mealList = lunchMapper.toMealEntityList(mealDTOS);
-
-        for (int i = 0; i < mealList.size(); i++) {
-            mealDAO.add(mealList.get(i));
-        }
-
-        LunchScheduleResponseDTO lunchScheduleResponseDTO = lunchMapper.toLunchScheduleDTO(savedSchedule);
-
-        return lunchScheduleResponseDTO;
+        return lunchMapper.toLunchScheduleDTO(savedLunchSchedule);
     }
 
     public LunchScheduleResponseDTO getLunchScheduleById(Long scheduleId) {
         LunchSchedule lunchSchedule = lunchScheduleDAO.getScheduleLunch(scheduleId);
-
         if (lunchSchedule != null) {
             List<Menu> menus = menuDAO.getAllByLunchScheduleId(lunchSchedule.getId());
 
+            if (menus != null) {
             for (Menu menu : menus) {
                 List<Meal> meals = mealDAO.getMealByMenuId(menu.getId());
-                menu.setMealList(meals);
+                menu.setMeals(meals);
             }
-
             lunchSchedule.setMenuList(menus);
-        }
-
+        }}
         return lunchMapper.toLunchScheduleDTO(lunchSchedule);
     }
 }

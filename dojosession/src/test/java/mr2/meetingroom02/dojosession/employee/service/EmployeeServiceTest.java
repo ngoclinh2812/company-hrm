@@ -39,9 +39,9 @@ class EmployeeServiceTest {
                         .build()
         );
 
-        when(employeeDAO.getAllExceptDeleted()).thenReturn(mockEmployees);
+        when(employeeDAO.getAllExceptDeleted(1)).thenReturn(mockEmployees);
 
-        List<EmployeeResponseDTO> result = employeeService.getAllEmployees();
+        List<EmployeeResponseDTO> result = employeeService.getAllEmployees(1);
 
         assertEquals(mockEmployees.size(), result.size());
     }
