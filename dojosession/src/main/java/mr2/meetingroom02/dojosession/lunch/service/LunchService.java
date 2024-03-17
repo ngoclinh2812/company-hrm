@@ -15,7 +15,7 @@ import org.hibernate.MappingException;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.rmi.ConnectIOException;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,34 +36,33 @@ public class LunchService {
     @Inject
     private LunchMapper lunchMapper;
 
-    public LunchScheduleResponseDTO createLunchSchedule(CreateLunchScheduleDTO scheduleDTO) throws InternalError, MappingException,  {
-        LunchSchedule lunchSchedule = LunchSchedule.builder()
-                .startDate(scheduleDTO.getStartDate())
-                .endDate(scheduleDTO.getEndDate())
-                .build();
+    @Transactional
+    public LunchScheduleResponseDTO createLunchSchedule(CreateLunchScheduleDTO scheduleDTO) throws InternalError, MappingException  {
 
-        LunchSchedule savedSchedule = lunchScheduleDAO.add(lunchSchedule);
+        LunchSchedule lunchSchedule = lunchMapper.toScheduleEntity(scheduleDTO);
 
-        List<MenuDTO> menuDTOS = scheduleDTO.getMenuList();
+        LunchSchedule savedLunchSchedule = lunchScheduleDAO.add(lunchSchedule);
 
-        List<Menu> menuList = lunchMapper.toMenuEntityList(menuDTOS);
+        lunchSchedule.getMenuList().forEach(menu -> {
+                menu.setLunchSchedule(lunchSchedule);
+                menu.getMeals().forEach(meal -> meal.setMenu(menu));
+        });
 
-        for (int i = 0; i < menuList.size(); i++) {
-            menuDAO.add(menuList.get(i));
-        }
+        return lunchMapper.toLunchScheduleDTO(savedLunchSchedule);
+    }
 
-        List<MealDTO> mealDTOS = menuDTOS.stream()
-                .flatMap(menuDTO -> menuDTO.getMeals().stream())
-                .collect(Collectors.toList());
+    public LunchScheduleResponseDTO getLunchScheduleById(Long scheduleId) {
+        LunchSchedule lunchSchedule = lunchScheduleDAO.getScheduleLunch(scheduleId);
+        if (lunchSchedule != null) {
+            List<Menu> menus = menuDAO.getAllByLunchScheduleId(lunchSchedule.getId());
 
-        List<Meal> mealList = lunchMapper.toMealEntityList(mealDTOS);
-
-        for (int i = 0; i < mealList.size(); i++) {
-            mealDAO.add(mealList.get(i));
-        }
-
-        LunchScheduleResponseDTO lunchScheduleResponseDTO = lunchMapper.toLunchScheduleDTO(savedSchedule);
-
-        return lunchScheduleResponseDTO;
+            if (menus != null) {
+            for (Menu menu : menus) {
+                List<Meal> meals = mealDAO.getMealByMenuId(menu.getId());
+                menu.setMeals(meals);
+            }
+            lunchSchedule.setMenuList(menus);
+        }}
+        return lunchMapper.toLunchScheduleDTO(lunchSchedule);
     }
 }

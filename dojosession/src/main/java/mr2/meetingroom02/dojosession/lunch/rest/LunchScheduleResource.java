@@ -13,16 +13,16 @@ import javax.ws.rs.core.Response;
 @Path("lunch")
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
-public class LunchScheduleResourceDAO {
+public class LunchScheduleResource {
 
     @Inject
     private LunchService lunchService;
 
-
     @GET
     @Path("/{id}")
-    public Response getLunchScheduleById(@PathParam(value = "id") Long id) {
-        return Response.ok().build();
+    public Response getLunchSchedule(@PathParam(value = "id") Long scheduleId) throws NotFoundException{
+        LunchScheduleResponseDTO responseDTO = lunchService.getLunchScheduleById(scheduleId);
+        return Response.ok().entity(responseDTO).build();
     }
 
     @POST

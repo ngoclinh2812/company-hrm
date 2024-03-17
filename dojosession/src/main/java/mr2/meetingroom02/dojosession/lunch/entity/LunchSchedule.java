@@ -4,21 +4,26 @@ import lombok.*;
 import mr2.meetingroom02.dojosession.base.entity.BaseEntity;
 
 import javax.json.bind.annotation.JsonbDateFormat;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 @Builder
+@Entity
 public class LunchSchedule extends BaseEntity {
 
     @JsonbDateFormat("yyyy-MM-dd")
-    private LocalDate startDate;
+    private Date startDate;
 
     @JsonbDateFormat("yyyy-MM-dd")
-    private LocalDate endDate;
+    private Date endDate;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "lunchSchedule")
+    private List<Menu> menuList;
 
 }

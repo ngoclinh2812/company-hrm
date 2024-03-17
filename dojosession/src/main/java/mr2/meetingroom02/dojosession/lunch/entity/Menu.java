@@ -17,16 +17,11 @@ public class Menu extends BaseEntity {
 
     private LocalDate date;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "menu_schedule_id")
     private LunchSchedule lunchSchedule;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "menu_meal",
-            joinColumns = { @JoinColumn(name = "menu_id")},
-            inverseJoinColumns = { @JoinColumn(name = "meal_id") }
-    )
-    private List<Meal> mealList;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "menu")
+    private List<Meal> meals;
 
 }

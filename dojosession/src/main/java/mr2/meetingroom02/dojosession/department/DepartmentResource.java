@@ -1,12 +1,10 @@
 package mr2.meetingroom02.dojosession.department;
 
-//import mr2.meetingroom02.dojosession.department.DepartmentService;
+import mr2.meetingroom02.dojosession.department.dto.DepartmentDTO;
 
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.validation.Valid;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -27,5 +25,10 @@ public class DepartmentResource {
     @Path("/{id}/employees")
     public Response getDepartmentEmployeeList(@PathParam("id") Long id) {
         return Response.ok().entity(departmentService.getDeptEmployees(id)).build();
+    }
+
+    @POST
+    public Response createDepartment(@Valid DepartmentDTO departmentDTO) {
+        return Response.ok().entity(departmentService.addNewDepartment(departmentDTO)).build();
     }
 }
