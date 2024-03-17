@@ -39,11 +39,9 @@ public class EmployeeService {
 
     private static final Logger logger = LogManager.getLogger(EmployeeService.class);
 
-    public List<EmployeeResponseDTO> getAllEmployees() {
-        List<Employee> employees = employeeDAO.findAll();
-        return employees.stream()
-                .map(EmployeeResponseDTO::fromEntity)
-                .collect(Collectors.toList());
+    public List<EmployeeResponseDTO> getAllEmployees() throws NotFoundException {
+        List<Employee> employees = employeeDAO.searchEmployeesByCategory();
+        return employeeMapper.toEmployeeDTOList(employees);
     }
 
     public EmployeeResponseDTO add(EmployeeCreateRequestDTO employeeCreateRequestDTO) throws BadRequestException, NotFoundException {

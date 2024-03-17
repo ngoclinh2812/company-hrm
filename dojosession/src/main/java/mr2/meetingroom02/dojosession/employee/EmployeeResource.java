@@ -31,7 +31,7 @@ public class EmployeeResource {
     private static final Logger logger = LogManager.getLogger(EmployeeResource.class);
 
     @GET
-    public Response getAllEmployees() {
+    public Response getAllEmployees() throws NotFoundException {
         logger.info("Attempting to get all employees");
         List<EmployeeResponseDTO> employeeList = employeeService.getAllEmployees();
         return Response.ok().entity(employeeList).build();
