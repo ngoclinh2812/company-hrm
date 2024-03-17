@@ -41,12 +41,12 @@ public class LunchService {
 
         LunchSchedule lunchSchedule = lunchMapper.toScheduleEntity(scheduleDTO);
 
+        LunchSchedule savedLunchSchedule = lunchScheduleDAO.add(lunchSchedule);
+
         lunchSchedule.getMenuList().forEach(menu -> {
                 menu.setLunchSchedule(lunchSchedule);
                 menu.getMeals().forEach(meal -> meal.setMenu(menu));
         });
-
-        LunchSchedule savedLunchSchedule = lunchScheduleDAO.add(lunchSchedule);
 
         return lunchMapper.toLunchScheduleDTO(savedLunchSchedule);
     }

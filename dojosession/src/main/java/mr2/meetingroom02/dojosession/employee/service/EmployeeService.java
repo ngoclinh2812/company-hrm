@@ -1,6 +1,7 @@
 package mr2.meetingroom02.dojosession.employee.service;
 
-import mr2.meetingroom02.dojosession.assignment.dao.AssignmentDAO;
+import mr2.meetingroom02.dojosession.base.exception.BadRequestException;
+import mr2.meetingroom02.dojosession.base.exception.NotFoundException;
 import mr2.meetingroom02.dojosession.department.DepartmentDAO;
 import mr2.meetingroom02.dojosession.department.entity.Department;
 import mr2.meetingroom02.dojosession.employee.EmployeeDAO;
@@ -16,6 +17,10 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static mr2.meetingroom02.dojosession.base.exception.message.DepartmentExceptionMessage.DEPARTMENT_NOT_FOUND;
+import static mr2.meetingroom02.dojosession.employee.dto.EmployeeResponseDTO.fromEntity;
 
 @Stateless
 public class EmployeeService {
@@ -34,13 +39,16 @@ public class EmployeeService {
 
     private static final Logger logger = LogManager.getLogger(EmployeeService.class);
 
-    public List<EmployeeResponseDTO> getAllEmployees(int pageSize) {
-        return employeeMapper.toEmployeeDTOList(employeeDAO.getAllExceptDeleted(pageSize));
+    public List<EmployeeResponseDTO> getAllEmployees() {
+        List<Employee> employees = employeeDAO.findAll();
+        return employees.stream()
+                .map(EmployeeResponseDTO::fromEntity)
+                .collect(Collectors.toList());
     }
 
-    public EmployeeResponseDTO add(EmployeeCreateRequestDTO employeeCreateRequestDTO) {
+    public EmployeeResponseDTO add(EmployeeCreateRequestDTO employeeCreateRequestDTO) throws BadRequestException, NotFoundException {
 
-        Department department = departmentDAO.findById(employeeCreateRequestDTO.getDepartmentId()).orElseThrow();
+        Department department = departmentDAO.findById(employeeCreateRequestDTO.getDepartmentId()).orElseThrow(() -> new NotFoundException(DEPARTMENT_NOT_FOUND));
 
         Employee newEmployee = Employee.builder()
                 .dateOfBirth(employeeCreateRequestDTO.getDateOfBirth())
@@ -60,7 +68,7 @@ public class EmployeeService {
         return employeeMapper.toEmployeeDTO(savedEmp);
     }
 
-    public Employee update(EmployeeUpdateRequestDTO dto) {
+    public Employee update(EmployeeUpdateRequestDTO dto) throws BadRequestException {
         Employee employee = employeeDAO.findById(dto.getId()).orElseThrow();
         Employee updatedEmployee = employeeMapper.toUpdatesEntity(dto);
         return employeeDAO.update(updatedEmployee);
@@ -68,7 +76,7 @@ public class EmployeeService {
 
     public void remove(Long employeeId) {
         Employee employee = employeeDAO.findById(employeeId).orElseThrow(); //TODO:L Throw exception not found, not null
-        employee.setDeleted(true);
+        employee.setIsDeleted(true);
         employeeDAO.update(employee);
     }
 }

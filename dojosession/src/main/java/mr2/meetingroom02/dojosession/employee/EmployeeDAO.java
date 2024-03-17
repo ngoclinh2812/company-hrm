@@ -18,24 +18,19 @@ public class EmployeeDAO extends BaseDAO<Employee> {
         super(Employee.class);
     }
 
-//    public List<Employee> getAllExceptDeleted() {
+//    public List<Employee> sortAllEmployeesByCategory() {
 //        TypedQuery<Employee> query = entityManager.createQuery(
-//                "SELECT e FROM Employee e WHERE e.isDeleted = false", Employee.class);
+//                "SELECT e FROM Employee e", Employee.class);
 //
-//        List<Employee> nonDeletedEmployees = query.getResultList();
-//        return nonDeletedEmployees;
+//        List<Employee> employees = query.getResultList();
+//        return employees;
 //    }
 
-    public List<Employee> getAllExceptDeleted(int pageSize) {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
-        Root<Employee> from = query.from(Employee.class);
-        CriteriaQuery<Employee> select = query.select(from);
-        TypedQuery<Employee> typedQuery = entityManager.createQuery(select);
-        typedQuery.setFirstResult(0);
-        typedQuery.setMaxResults(pageSize);
-        List<Employee> employees = typedQuery.getResultList();
-        return employees;
+    public List<Employee> getAllEmployees() {
+        TypedQuery<Employee> query = entityManager.createQuery(
+                "SELECT e FROM Employee e", Employee.class);
+
+        return query.getResultList();
     }
 
     public List<Employee> findAllDeptEmployee(Long departmentId) {

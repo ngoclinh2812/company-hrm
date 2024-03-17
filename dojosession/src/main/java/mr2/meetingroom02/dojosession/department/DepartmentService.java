@@ -20,6 +20,9 @@ public class DepartmentService {
     @Inject
     private EmployeeDAO employeeDAO;
 
+    @Inject
+    private DepartmentMapper departmentMapper;
+
     public List<DepartmentDTO> getDepartmentList() {
         List<Department> departments = departmentDAO.findAll();
         return departments.stream()
@@ -37,5 +40,10 @@ public class DepartmentService {
                         .name(e.getFirstName() + " " + e.getMiddleName() + " " + e.getLastName())
                         .build()
                 ).collect(Collectors.toList());
+    }
+
+    public DepartmentDTO addNewDepartment(DepartmentDTO departmentDTO) {
+        Department department = departmentMapper.toDeptEntity(departmentDTO);
+        return departmentMapper.toResponseDTO(departmentDAO.add(department));
     }
 }
