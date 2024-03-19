@@ -27,8 +27,11 @@ public interface EmployeeMapper {
     Employee toUpdatesEntity (EmployeeUpdateRequestDTO dto);
 
     @AfterMapping
-    default void setBookAuthor(@MappingTarget EmployeeResponseDTO employeeDTO, Employee employee) {
-        employeeDTO.setName(employee.getFirstName() + " " + employee.getMiddleName() + " " + employee.getLastName());
+    default void setName(@MappingTarget EmployeeResponseDTO employeeDTO, Employee employee) {
+        String fullName = employee.getFirstName() + " " +
+                (employee.getMiddleName() != null ? employee.getMiddleName() + " " : "") +
+                employee.getLastName();
+        employeeDTO.setName(fullName);
     }
 
 }

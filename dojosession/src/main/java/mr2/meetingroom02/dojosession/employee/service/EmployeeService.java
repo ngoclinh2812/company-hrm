@@ -17,10 +17,9 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static mr2.meetingroom02.dojosession.base.exception.message.DepartmentExceptionMessage.DEPARTMENT_NOT_FOUND;
-import static mr2.meetingroom02.dojosession.employee.dto.EmployeeResponseDTO.fromEntity;
+import static mr2.meetingroom02.dojosession.base.exception.message.EmployeeExceptionMessage.EMPLOYEE_NOT_FOUND;
 
 @Stateless
 public class EmployeeService {
@@ -39,41 +38,68 @@ public class EmployeeService {
 
     private static final Logger logger = LogManager.getLogger(EmployeeService.class);
 
-    public List<EmployeeResponseDTO> getAllEmployees() throws NotFoundException {
-        List<Employee> employees = employeeDAO.searchEmployeesByCategory();
+    public List<EmployeeResponseDTO> getEmployeesByCategory(String gender, Long departmentId, Long pageNumber, Long pageSize) throws NotFoundException {
+        List<Employee> employees = employeeDAO.searchEmployeesByCategory(gender, departmentId, pageNumber.intValue(), pageSize.intValue());
         return employeeMapper.toEmployeeDTOList(employees);
     }
 
     public EmployeeResponseDTO add(EmployeeCreateRequestDTO employeeCreateRequestDTO) throws BadRequestException, NotFoundException {
 
         Department department = departmentDAO.findById(employeeCreateRequestDTO.getDepartmentId()).orElseThrow(() -> new NotFoundException(DEPARTMENT_NOT_FOUND));
+        boolean isPhoneDuplicated = isDuplicatedPhone(employeeCreateRequestDTO.getPhone());
+        boolean isEmailDuplicated = isDuplicatedEmail(employeeCreateRequestDTO.getEmail());
 
-        Employee newEmployee = Employee.builder()
-                .dateOfBirth(employeeCreateRequestDTO.getDateOfBirth())
-                .gender(employeeCreateRequestDTO.getGender())
-                .salary(employeeCreateRequestDTO.getSalary())
-                .firstName(employeeCreateRequestDTO.getFirstName())
-                .middleName(employeeCreateRequestDTO.getMiddleName())
-                .lastName(employeeCreateRequestDTO.getLastName())
-                .email(employeeCreateRequestDTO.getEmail())
-                .phone(employeeCreateRequestDTO.getPhone())
-                .department(department)
-                .isDeleted(false)
-                .build();
+        if (!isPhoneDuplicated && !isEmailDuplicated) {
+            try {
+                Employee newEmployee = Employee.builder()
+                        .dateOfBirth(employeeCreateRequestDTO.getDateOfBirth())
+                        .gender(employeeCreateRequestDTO.getGender())
+                        .salary(employeeCreateRequestDTO.getSalary())
+                        .firstName(employeeCreateRequestDTO.getFirstName())
+                        .middleName(employeeCreateRequestDTO.getMiddleName())
+                        .lastName(employeeCreateRequestDTO.getLastName())
+                        .email(employeeCreateRequestDTO.getEmail())
+                        .phone(employeeCreateRequestDTO.getPhone())
+                        .department(department)
+                        .isDeleted(false)
+                        .build();
 
-        Employee savedEmp = employeeDAO.add(newEmployee);
+                Employee savedEmp = employeeDAO.add(newEmployee);
 
-        return employeeMapper.toEmployeeDTO(savedEmp);
+                return employeeMapper.toEmployeeDTO(savedEmp);
+
+            } catch (Exception e) {
+                logger.error("Unsuccessful");
+            }
+        }
+
+        return null;
+    }
+
+    private boolean isDuplicatedPhone(String phone) {
+        Employee employeeWithDuplicatedPhone = employeeDAO.findEmployeeByPhone(phone);
+        if (employeeWithDuplicatedPhone != null) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isDuplicatedEmail(String email) {
+        Employee employeeWithDuplicatedEmail = employeeDAO.findEmployeeByEmail(email);
+        if (employeeWithDuplicatedEmail != null) {
+            return false;
+        }
+        return true;
     }
 
     public Employee update(EmployeeUpdateRequestDTO dto) throws BadRequestException {
-        Employee employee = employeeDAO.findById(dto.getId()).orElseThrow();
+        Employee employee = employeeDAO.findById(dto.getId()).orElseThrow(() -> new BadRequestException(EMPLOYEE_NOT_FOUND));
         Employee updatedEmployee = employeeMapper.toUpdatesEntity(dto);
         return employeeDAO.update(updatedEmployee);
     }
 
-    public void remove(Long employeeId) {
-        Employee employee = employeeDAO.findById(employeeId).orElseThrow(); //TODO:L Throw exception not found, not null
+    public void remove(Long employeeId) throws NotFoundException {
+        Employee employee = employeeDAO.findById(employeeId).orElseThrow(() -> new NotFoundException(EMPLOYEE_NOT_FOUND));
         employee.setIsDeleted(true);
         employeeDAO.update(employee);
     }

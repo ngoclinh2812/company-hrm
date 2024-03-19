@@ -20,13 +20,13 @@ public class EmployeeResponseDTO implements Serializable {
     private String gender;
     private int salary;
 
-    public static EmployeeResponseDTO fromEntity(Employee employee) {
-        return EmployeeResponseDTO.builder()
-                .id(employee.getId())
-                .name(employee.getFirstName() + " " + employee.getMiddleName() + " " + employee.getLastName())
-                .dateOfBirth(employee.getDateOfBirth())
-                .gender(employee.getGender())
-                .build();
-    }
+//    public static EmployeeResponseDTO fromEntity(Employee employee) {
+//        return EmployeeResponseDTO.builder()
+//                .id(employee.getId())
+//                .name(employee.getFirstName() + " " + employee.getMiddleName() + " " + employee.getLastName())
+//                .dateOfBirth(employee.getDateOfBirth())
+//                .gender(employee.getGender())
+//                .build();
+//    }
 
 }

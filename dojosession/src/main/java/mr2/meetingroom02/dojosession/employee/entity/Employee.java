@@ -31,7 +31,8 @@ public class Employee extends BaseEntity {
     private String firstName;
 
     @Column
-    private String gender;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     @Column
     private String lastName;

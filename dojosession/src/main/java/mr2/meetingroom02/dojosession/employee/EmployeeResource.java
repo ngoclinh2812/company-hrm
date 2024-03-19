@@ -5,7 +5,6 @@ import mr2.meetingroom02.dojosession.base.exception.NotFoundException;
 import mr2.meetingroom02.dojosession.employee.dto.EmployeeCreateRequestDTO;
 import mr2.meetingroom02.dojosession.employee.dto.EmployeeResponseDTO;
 import mr2.meetingroom02.dojosession.employee.dto.EmployeeUpdateRequestDTO;
-import mr2.meetingroom02.dojosession.employee.entity.Employee;
 import mr2.meetingroom02.dojosession.employee.service.EmployeeService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,7 +21,7 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 //TODO: 401, 500, 403, 404 - create and test exceptions one by one, entity Not Found, bad request, internal server error
-//TODO: Practice Query Param (paging)
+//TODO: Practice paging
 public class EmployeeResource {
 
     @Inject
@@ -31,17 +30,19 @@ public class EmployeeResource {
     private static final Logger logger = LogManager.getLogger(EmployeeResource.class);
 
     @GET
-    public Response getAllEmployees() throws NotFoundException {
-        logger.info("Attempting to get all employees");
-        List<EmployeeResponseDTO> employeeList = employeeService.getAllEmployees();
+    public Response getEmployeesByCategory(@QueryParam("gender") String gender,
+                                           @QueryParam("dept_id") Long departmentId,
+                                           @QueryParam("page_number") Long pageNumber,
+                                           @QueryParam("page_size") Long pageSize) throws NotFoundException {
+        List<EmployeeResponseDTO> employeeList = employeeService.getEmployeesByCategory(gender, departmentId, pageNumber, pageSize);
         return Response.ok().entity(employeeList).build();
     }
 
+    //TODO: Assign assignments of a project to employees who have less than 1 project at the time being and number of task is under 10
+
     @POST
-    //TODO: bad request (?)
     public Response addNewEmployee(@Valid EmployeeCreateRequestDTO employeeCreateRequestDTO) throws BadRequestException, NotFoundException {
         EmployeeResponseDTO createdEmployee = employeeService.add(employeeCreateRequestDTO);
-        //TODO: return uri in header (reference in agile skills)
         return Response.created(URI.create("employees/" + createdEmployee.getId())).entity(createdEmployee).build();
     }
 
@@ -53,7 +54,7 @@ public class EmployeeResource {
 
     @DELETE
     @Path("/{employeeId}")
-    public Response deleteEmployee(@PathParam("employeeId") Long employeeId) {
+    public Response deleteEmployee(@PathParam("employeeId") Long employeeId) throws NotFoundException {
         employeeService.remove(employeeId);
         return Response.noContent().build();
     }

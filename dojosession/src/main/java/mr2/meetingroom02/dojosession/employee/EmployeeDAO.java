@@ -5,6 +5,7 @@ import mr2.meetingroom02.dojosession.base.exception.NotFoundException;
 import mr2.meetingroom02.dojosession.department.DepartmentDAO;
 import mr2.meetingroom02.dojosession.department.entity.Department;
 import mr2.meetingroom02.dojosession.employee.entity.Employee;
+import mr2.meetingroom02.dojosession.employee.entity.Gender;
 import org.hibernate.Session;
 
 import javax.ejb.Stateless;
@@ -15,6 +16,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,33 +32,34 @@ public class EmployeeDAO extends BaseDAO<Employee> {
     @Inject
     private DepartmentDAO departmentDAO;
 
-//    select * from employee e
-//    where gender = 'Male'
-//    and department_id = 7
-//    order by salary desc limit 5 ;
+    public List<Employee> searchEmployeesByCategory(String gender, Long departmentId, int pageNumber, int pageSize) throws NotFoundException {
 
-    public List<Employee> searchEmployeesByCategory() throws NotFoundException {
-
-        Department department = departmentDAO.findById(7).orElseThrow(() -> new NotFoundException(DEPARTMENT_NOT_FOUND));
+        Department department = departmentDAO.findById(departmentId).orElseThrow(() -> new NotFoundException(DEPARTMENT_NOT_FOUND));
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Employee> criteriaQuery = criteriaBuilder.createQuery(Employee.class);
         Root<Employee> employeeRoot = criteriaQuery.from(Employee.class);
 
-        Predicate predicateForGender
-                = criteriaBuilder.equal(employeeRoot.get("gender"), "Male");
+        List<Predicate> predicates = new ArrayList<>();
 
-        Predicate predicateForDepartment = criteriaBuilder.equal(employeeRoot.get("department"), department);
+        if (gender != null) {
+            predicates.add(criteriaBuilder.equal(employeeRoot.get("gender"), Gender.valueOf(gender)));
+        }
 
-        Predicate finalPredicate = criteriaBuilder.and(predicateForGender, predicateForDepartment);
+        if (department != null) {
+            predicates.add(criteriaBuilder.equal(employeeRoot.get("department"), department));
+        }
 
-        criteriaQuery.select(employeeRoot).where(finalPredicate);
+        criteriaQuery.select(employeeRoot).where(predicates.toArray(new Predicate[0]));
 
-        criteriaQuery.orderBy(criteriaBuilder.desc(employeeRoot.get("salary")));
+        int firstResult = (pageNumber - 1) * pageSize;
 
-        TypedQuery<Employee> query = entityManager.createQuery(criteriaQuery).setMaxResults(5);
-        List<Employee> results = query.getResultList();
-        return results;
+        TypedQuery<Employee> query = entityManager.createQuery(criteriaQuery)
+                .setFirstResult(firstResult)
+                .setMaxResults(pageSize);
+
+        List<Employee> employees = query.getResultList();
+        return employees;
     }
 
     public List<Employee> getAllEmployees() {
@@ -71,5 +74,17 @@ public class EmployeeDAO extends BaseDAO<Employee> {
         Query query = entityManager.createQuery(jpql, Employee.class);
         query.setParameter("departmentId", departmentId);
         return query.getResultList();
+    }
+
+    public Employee findEmployeeByPhone(String phone) {
+        TypedQuery<Employee> query  =  entityManager.createQuery("SELECT e FROM Employee e WHERE e.phone = :phone", Employee.class)
+                .setParameter("phone", phone);
+        return query.getSingleResult();
+    }
+
+    public Employee findEmployeeByEmail(String email) {
+        TypedQuery<Employee> query  =  entityManager.createQuery("SELECT e FROM Employee e WHERE e.email = :email", Employee.class)
+                .setParameter("email", email);
+        return query.getSingleResult();
     }
 }
