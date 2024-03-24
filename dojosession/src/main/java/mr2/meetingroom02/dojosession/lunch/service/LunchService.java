@@ -118,13 +118,14 @@ public class LunchService {
             lunchOrder.setMenu(menu);
             Meal meal = mealDAO.findById(mealId).orElseThrow();
             lunchOrder.setMeal(meal);
+            lunchOrderDAO.update(lunchOrder);
+
+            LunchOrder savedLunchOrder = lunchOrderDAO.insert(lunchOrder);
         }
 
-        LunchOrder savedLunchOrder = lunchOrderDAO.insert(lunchOrder);
+//        LunchOrder savedLunchOrder = lunchOrderDAO.insert(lunchOrder);
 
-
-
-        return savedLunchOrder;
+        return null;
     }
 
 

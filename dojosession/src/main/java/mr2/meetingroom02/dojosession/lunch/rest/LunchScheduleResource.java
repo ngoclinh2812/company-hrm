@@ -51,7 +51,7 @@ public class LunchScheduleResource {
     @Path("/lunch-order")
     public Response orderLunch(@Valid CreateLunchOrderDTO createLunchOrderDTO) throws BadRequestException {
         LunchOrder lunchOrder = lunchService.createLunchOrder(createLunchOrderDTO);
-        return Response.created(URI.create("lunch-order/" + lunchOrder.getId())).entity(null).build();
+        return Response.created(URI.create("lunch-order")).entity(null).build();
     }
 
     //TODO: Get list orders of upcoming week
