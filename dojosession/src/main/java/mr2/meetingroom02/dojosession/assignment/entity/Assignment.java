@@ -8,9 +8,7 @@ import mr2.meetingroom02.dojosession.base.entity.BaseEntity;
 import mr2.meetingroom02.dojosession.employee.entity.Employee;
 import mr2.meetingroom02.dojosession.project.entity.Project;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -27,5 +25,9 @@ public class Assignment extends BaseEntity {
     @ManyToOne
     @JoinColumn(name="project_id")
     private Project project;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private Statuz status;
 
 }

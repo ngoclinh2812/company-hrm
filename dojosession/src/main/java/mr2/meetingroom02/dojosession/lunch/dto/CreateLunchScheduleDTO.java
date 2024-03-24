@@ -11,6 +11,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.*;
 
 import javax.json.bind.annotation.JsonbDateFormat;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
@@ -23,10 +25,12 @@ import java.util.List;
 public class CreateLunchScheduleDTO implements Serializable {
 
     @JsonbDateFormat("yyyy-MM-dd")
-    private Date startDate;
+    @NotNull
+    private LocalDate startDate;
 
     @JsonbDateFormat("yyyy-MM-dd")
-    private Date endDate;
+    @NotNull
+    private LocalDate endDate;
 
     private List<MenuDTO> menuList;
 

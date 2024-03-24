@@ -10,17 +10,17 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 @Provider
-public class BadRequestExceptionMapper implements ExceptionMapper<BadRequestException> {
+public class DuplicateExceptionMapper implements ExceptionMapper<DuplicateException> {
 
     private static final Logger logger = LogManager.getLogger(BadRequestException.class);
 
     @Override
-    public Response toResponse(BadRequestException e) {
+    public Response toResponse(DuplicateException e) {
         logger.error(LoggingExceptionMessage.getMessage(e));
 
         ExceptionBody body = new ExceptionBody(
-                Response.Status.BAD_REQUEST.getStatusCode(),
-                Response.Status.BAD_REQUEST.getReasonPhrase(),
+                Response.Status.CONFLICT.getStatusCode(),
+                Response.Status.CONFLICT.getReasonPhrase(),
                 e.getMessage()
         );
 
@@ -28,6 +28,5 @@ public class BadRequestExceptionMapper implements ExceptionMapper<BadRequestExce
                 .status(body.getStatusCode())
                 .entity(body)
                 .type(MediaType.APPLICATION_JSON)
-                .build();
-    }
+                .build();    }
 }

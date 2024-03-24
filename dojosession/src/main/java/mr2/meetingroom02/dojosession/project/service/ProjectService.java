@@ -1,7 +1,7 @@
 package mr2.meetingroom02.dojosession.project.service;
 
 import mr2.meetingroom02.dojosession.assignment.dao.AssignmentDAO;
-import mr2.meetingroom02.dojosession.base.exception.ErrorMessage;
+import mr2.meetingroom02.dojosession.base.exception.message.EmployeeErrorMessage;
 import mr2.meetingroom02.dojosession.base.exception.NotFoundException;
 import mr2.meetingroom02.dojosession.employee.EmployeeDAO;
 import mr2.meetingroom02.dojosession.employee.entity.Employee;
@@ -28,7 +28,7 @@ public class ProjectService {
     private ProjectMapper projectMapper;
 
     public List<ProjectResponseDTO> getProjectsForEmployee(Long employeeId) throws NotFoundException {
-        Employee employee = employeeDAO.findById(employeeId).orElseThrow(() -> new NotFoundException(ErrorMessage.EMPLOYEE_NOT_FOUND));
+        Employee employee = employeeDAO.findById(employeeId).orElseThrow(() -> new NotFoundException(EmployeeErrorMessage.EMPLOYEE_NOT_FOUND));
         List<Project> projects = assignmentDAO.getProjectsForEmployee(employeeId);
         return projectMapper.toProjectDTOs(projects);
     }

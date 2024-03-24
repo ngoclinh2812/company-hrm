@@ -1,6 +1,7 @@
 package mr2.meetingroom02.dojosession.employee;
 
 import mr2.meetingroom02.dojosession.base.exception.BadRequestException;
+import mr2.meetingroom02.dojosession.base.exception.DuplicateException;
 import mr2.meetingroom02.dojosession.base.exception.NotFoundException;
 import mr2.meetingroom02.dojosession.employee.dto.EmployeeCreateRequestDTO;
 import mr2.meetingroom02.dojosession.employee.dto.EmployeeResponseDTO;
@@ -21,7 +22,6 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 //TODO: 401, 500, 403, 404 - create and test exceptions one by one, entity Not Found, bad request, internal server error
-//TODO: Practice paging
 public class EmployeeResource {
 
     @Inject
@@ -38,17 +38,14 @@ public class EmployeeResource {
         return Response.ok().entity(employeeList).build();
     }
 
-    //TODO: Assign assignments of a project to employees who have less than 1 project at the time being and number of task is under 10
-
     @POST
-    public Response addNewEmployee(@Valid EmployeeCreateRequestDTO employeeCreateRequestDTO) throws BadRequestException, NotFoundException {
+    public Response addNewEmployee(@Valid EmployeeCreateRequestDTO employeeCreateRequestDTO) throws BadRequestException, NotFoundException, DuplicateException {
         EmployeeResponseDTO createdEmployee = employeeService.add(employeeCreateRequestDTO);
         return Response.created(URI.create("employees/" + createdEmployee.getId())).entity(createdEmployee).build();
     }
 
     @PUT
-    @Path("/{empId}")
-    public Response updateEmployee(@Valid EmployeeUpdateRequestDTO dto) throws BadRequestException {
+    public Response updateEmployee(@Valid EmployeeUpdateRequestDTO dto) throws BadRequestException, DuplicateException, NotFoundException {
         return Response.ok().entity(employeeService.update(dto)).build();
     }
 
@@ -58,4 +55,5 @@ public class EmployeeResource {
         employeeService.remove(employeeId);
         return Response.noContent().build();
     }
+
 }

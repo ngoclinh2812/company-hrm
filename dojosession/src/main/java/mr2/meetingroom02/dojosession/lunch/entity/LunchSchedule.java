@@ -18,10 +18,10 @@ import java.util.List;
 public class LunchSchedule extends BaseEntity {
 
     @JsonbDateFormat("yyyy-MM-dd")
-    private Date startDate;
+    private LocalDate startDate;
 
     @JsonbDateFormat("yyyy-MM-dd")
-    private Date endDate;
+    private LocalDate endDate;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "lunchSchedule")
     private List<Menu> menuList;

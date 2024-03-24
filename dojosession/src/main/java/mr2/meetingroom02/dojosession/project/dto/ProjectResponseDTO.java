@@ -13,9 +13,4 @@ import mr2.meetingroom02.dojosession.project.entity.Project;
 public class ProjectResponseDTO {
     private String projectName;
 
-    public static ProjectResponseDTO fromEntity(Project project) {
-        return ProjectResponseDTO.builder()
-                .projectName(project.getProjectName())
-                .build();
-    }
 }

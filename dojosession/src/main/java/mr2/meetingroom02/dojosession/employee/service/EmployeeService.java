@@ -1,6 +1,7 @@
 package mr2.meetingroom02.dojosession.employee.service;
 
 import mr2.meetingroom02.dojosession.base.exception.BadRequestException;
+import mr2.meetingroom02.dojosession.base.exception.DuplicateException;
 import mr2.meetingroom02.dojosession.base.exception.NotFoundException;
 import mr2.meetingroom02.dojosession.department.DepartmentDAO;
 import mr2.meetingroom02.dojosession.department.entity.Department;
@@ -19,13 +20,10 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 import static mr2.meetingroom02.dojosession.base.exception.message.DepartmentExceptionMessage.DEPARTMENT_NOT_FOUND;
-import static mr2.meetingroom02.dojosession.base.exception.message.EmployeeExceptionMessage.EMPLOYEE_NOT_FOUND;
+import static mr2.meetingroom02.dojosession.base.exception.message.EmployeeExceptionMessage.*;
 
 @Stateless
 public class EmployeeService {
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     @Inject
     private EmployeeDAO employeeDAO;
@@ -43,58 +41,42 @@ public class EmployeeService {
         return employeeMapper.toEmployeeDTOList(employees);
     }
 
-    public EmployeeResponseDTO add(EmployeeCreateRequestDTO employeeCreateRequestDTO) throws BadRequestException, NotFoundException {
+    public EmployeeResponseDTO add(EmployeeCreateRequestDTO employeeCreateRequestDTO) throws BadRequestException, NotFoundException, DuplicateException {
 
         Department department = departmentDAO.findById(employeeCreateRequestDTO.getDepartmentId()).orElseThrow(() -> new NotFoundException(DEPARTMENT_NOT_FOUND));
-        boolean isPhoneDuplicated = isDuplicatedPhone(employeeCreateRequestDTO.getPhone());
-        boolean isEmailDuplicated = isDuplicatedEmail(employeeCreateRequestDTO.getEmail());
 
-        if (!isPhoneDuplicated && !isEmailDuplicated) {
-            try {
-                Employee newEmployee = Employee.builder()
-                        .dateOfBirth(employeeCreateRequestDTO.getDateOfBirth())
-                        .gender(employeeCreateRequestDTO.getGender())
-                        .salary(employeeCreateRequestDTO.getSalary())
-                        .firstName(employeeCreateRequestDTO.getFirstName())
-                        .middleName(employeeCreateRequestDTO.getMiddleName())
-                        .lastName(employeeCreateRequestDTO.getLastName())
-                        .email(employeeCreateRequestDTO.getEmail())
-                        .phone(employeeCreateRequestDTO.getPhone())
-                        .department(department)
-                        .isDeleted(false)
-                        .build();
+        isDuplicatedPhone(employeeCreateRequestDTO.getPhone());
+        isDuplicatedEmail(employeeCreateRequestDTO.getEmail());
+        isSalaryNegative(employeeCreateRequestDTO.getSalary());
 
-                Employee savedEmp = employeeDAO.add(newEmployee);
+        Employee newEmployee = Employee.builder()
+                .dateOfBirth(employeeCreateRequestDTO.getDateOfBirth())
+                .gender(employeeCreateRequestDTO.getGender())
+                .salary(employeeCreateRequestDTO.getSalary())
+                .firstName(employeeCreateRequestDTO.getFirstName())
+                .middleName(employeeCreateRequestDTO.getMiddleName())
+                .lastName(employeeCreateRequestDTO.getLastName())
+                .email(employeeCreateRequestDTO.getEmail())
+                .phone(employeeCreateRequestDTO.getPhone())
+                .department(department)
+                .isDeleted(false)
+                .build();
 
-                return employeeMapper.toEmployeeDTO(savedEmp);
+        Employee savedEmp = employeeDAO.add(newEmployee);
 
-            } catch (Exception e) {
-                logger.error("Unsuccessful");
-            }
-        }
+        return employeeMapper.toEmployeeDTO(savedEmp);
 
-        return null;
     }
 
-    private boolean isDuplicatedPhone(String phone) {
-        Employee employeeWithDuplicatedPhone = employeeDAO.findEmployeeByPhone(phone);
-        if (employeeWithDuplicatedPhone != null) {
-            return false;
-        }
-        return true;
-    }
+    public Employee update(EmployeeUpdateRequestDTO updateRequestDTO) throws BadRequestException, NotFoundException, DuplicateException {
+        Department department = departmentDAO.findById(updateRequestDTO.getDepartmentId()).orElseThrow(() -> new NotFoundException(DEPARTMENT_NOT_FOUND));
+        Employee employee = employeeDAO.findById(updateRequestDTO.getId()).orElseThrow(() -> new BadRequestException(EMPLOYEE_NOT_FOUND));
 
-    private boolean isDuplicatedEmail(String email) {
-        Employee employeeWithDuplicatedEmail = employeeDAO.findEmployeeByEmail(email);
-        if (employeeWithDuplicatedEmail != null) {
-            return false;
-        }
-        return true;
-    }
+        isDuplicatedPhone(updateRequestDTO.getPhone());
+        isDuplicatedEmail(updateRequestDTO.getEmail());
+        isSalaryNegative(updateRequestDTO.getSalary());
 
-    public Employee update(EmployeeUpdateRequestDTO dto) throws BadRequestException {
-        Employee employee = employeeDAO.findById(dto.getId()).orElseThrow(() -> new BadRequestException(EMPLOYEE_NOT_FOUND));
-        Employee updatedEmployee = employeeMapper.toUpdatesEntity(dto);
+        Employee updatedEmployee = employeeMapper.toUpdatesEntity(updateRequestDTO);
         return employeeDAO.update(updatedEmployee);
     }
 
@@ -103,4 +85,20 @@ public class EmployeeService {
         employee.setIsDeleted(true);
         employeeDAO.update(employee);
     }
+
+    private void isSalaryNegative(int salary) throws BadRequestException {
+        if (salary < 0) throw new BadRequestException(SALARY_IS_NEGATIVE);
+    }
+
+    private void isDuplicatedPhone(String phone) throws DuplicateException {
+        Employee employeeWithDuplicatedPhone = employeeDAO.findEmployeeByPhone(phone);
+        if (employeeWithDuplicatedPhone != null) throw new DuplicateException(DUPLICATED_PHONE);
+    }
+
+    private void isDuplicatedEmail(String email) throws DuplicateException {
+        Employee employeeWithDuplicatedEmail = employeeDAO.findEmployeeByEmail(email);
+        if (employeeWithDuplicatedEmail != null) throw new DuplicateException(DUPLICATED_EMAIL);
+    }
+
+
 }

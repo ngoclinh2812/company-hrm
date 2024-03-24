@@ -41,7 +41,6 @@ public class EmployeeDAO extends BaseDAO<Employee> {
         Root<Employee> employeeRoot = criteriaQuery.from(Employee.class);
 
         List<Predicate> predicates = new ArrayList<>();
-
         if (gender != null) {
             predicates.add(criteriaBuilder.equal(employeeRoot.get("gender"), Gender.valueOf(gender)));
         }
@@ -49,11 +48,9 @@ public class EmployeeDAO extends BaseDAO<Employee> {
         if (department != null) {
             predicates.add(criteriaBuilder.equal(employeeRoot.get("department"), department));
         }
-
         criteriaQuery.select(employeeRoot).where(predicates.toArray(new Predicate[0]));
 
         int firstResult = (pageNumber - 1) * pageSize;
-
         TypedQuery<Employee> query = entityManager.createQuery(criteriaQuery)
                 .setFirstResult(firstResult)
                 .setMaxResults(pageSize);
@@ -87,4 +84,10 @@ public class EmployeeDAO extends BaseDAO<Employee> {
                 .setParameter("email", email);
         return query.getSingleResult();
     }
+
+    public List<Employee> getEmployeesWithNumberOfCurrentProjectLessThan(int i) {
+
+        return null;
+    }
+
 }

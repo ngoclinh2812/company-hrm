@@ -5,10 +5,12 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 import mr2.meetingroom02.dojosession.employee.entity.Gender;
+import org.hibernate.annotations.NotFound;
 
 import javax.json.bind.annotation.JsonbDateFormat;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
@@ -36,7 +38,9 @@ public class EmployeeCreateRequestDTO {
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
-    
+
+    @Min(0)
     private int salary;
-    private Integer departmentId;
+
+    private Long departmentId;
 }
