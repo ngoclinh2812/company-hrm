@@ -3,7 +3,7 @@ package mr2.meetingroom02.dojosession.project.service;
 import mr2.meetingroom02.dojosession.assignment.dao.AssignmentDAO;
 import mr2.meetingroom02.dojosession.base.exception.message.EmployeeErrorMessage;
 import mr2.meetingroom02.dojosession.base.exception.NotFoundException;
-import mr2.meetingroom02.dojosession.employee.EmployeeDAO;
+import mr2.meetingroom02.dojosession.employee.dao.EmployeeDAO;
 import mr2.meetingroom02.dojosession.employee.entity.Employee;
 import mr2.meetingroom02.dojosession.project.dto.ProjectResponseDTO;
 import mr2.meetingroom02.dojosession.project.entity.Project;

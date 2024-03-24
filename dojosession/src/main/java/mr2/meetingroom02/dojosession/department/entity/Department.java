@@ -22,6 +22,6 @@ public class Department extends BaseEntity {
 
     private LocalDate startDate;
 
-    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
     private List<Employee> employees;
 }

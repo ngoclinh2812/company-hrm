@@ -1,6 +1,7 @@
 package mr2.meetingroom02.dojosession.department;
 
-import mr2.meetingroom02.dojosession.employee.EmployeeDAO;
+import mr2.meetingroom02.dojosession.department.service.DepartmentService;
+import mr2.meetingroom02.dojosession.employee.dao.EmployeeDAO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

@@ -82,9 +82,7 @@ public class LunchService {
     }
 
     private void checkValidDateSchedule(LocalDate startDate, LocalDate endDate) throws BadRequestException {
-        if (startDate.isBefore(LocalDate.now())) {
-            throw new BadRequestException(START_DATE_IS_BEFORE_CURRENT_DATE);
-        }
+        if (startDate.isBefore(LocalDate.now())) throw new BadRequestException(START_DATE_IS_BEFORE_CURRENT_DATE);
         if (startDate.isAfter(endDate)) throw new BadRequestException(START_DATE_IS_AFTER_END_DATE);
         checkOverlapSchedule(startDate, endDate);
     }
@@ -92,7 +90,7 @@ public class LunchService {
 
     private void checkOverlapSchedule(LocalDate startDate, LocalDate endDate) throws BadRequestException {
         List<LunchSchedule> lunchSchedules = lunchScheduleDAO.findOverlapLunchSchedule(startDate, endDate);
-        if (lunchSchedules == null) {
+        if (lunchSchedules != null) {
             throw new BadRequestException(OVERLAP_LUNCH_SCHEDULE);
         }
     }

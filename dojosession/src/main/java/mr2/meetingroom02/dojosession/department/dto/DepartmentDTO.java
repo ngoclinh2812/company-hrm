@@ -10,5 +10,6 @@ import java.io.Serializable;
 @Setter
 @Builder
 public class DepartmentDTO implements Serializable {
+    private Long id;
     private String name;
 }

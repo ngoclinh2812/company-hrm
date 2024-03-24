@@ -17,17 +17,11 @@ import java.time.LocalDate;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EmployeeUpdateRequestDTO {
 
-    private Long id;
-
-    @JsonbDateFormat("yyyy-MM-dd")
-    private LocalDate dateOfBirth;
-
     private String firstName;
     private String middleName;
     private String lastName;
     private String email;
     private String phone;
-    private String gender;
     private int salary;
     private Integer departmentId;
 }

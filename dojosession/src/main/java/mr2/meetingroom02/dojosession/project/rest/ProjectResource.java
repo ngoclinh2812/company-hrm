@@ -1,4 +1,4 @@
-package mr2.meetingroom02.dojosession.project;
+package mr2.meetingroom02.dojosession.project.rest;
 
 import mr2.meetingroom02.dojosession.base.exception.NotFoundException;
 import mr2.meetingroom02.dojosession.project.dto.ProjectResponseDTO;

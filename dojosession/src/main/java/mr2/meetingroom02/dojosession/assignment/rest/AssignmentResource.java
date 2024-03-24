@@ -1,4 +1,4 @@
-package mr2.meetingroom02.dojosession.assignment;
+package mr2.meetingroom02.dojosession.assignment.rest;
 
 import mr2.meetingroom02.dojosession.assignment.entity.Assignment;
 import mr2.meetingroom02.dojosession.assignment.entity.CreateEmployeeAssignmentDTO;

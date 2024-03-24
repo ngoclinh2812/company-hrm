@@ -1,4 +1,4 @@
-package mr2.meetingroom02.dojosession.department;
+package mr2.meetingroom02.dojosession.department.mapper;
 
 import mr2.meetingroom02.dojosession.department.dto.DepartmentDTO;
 import mr2.meetingroom02.dojosession.department.entity.Department;

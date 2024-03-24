@@ -1,4 +1,4 @@
-package mr2.meetingroom02.dojosession.department;
+package mr2.meetingroom02.dojosession.department.dao;
 
 import mr2.meetingroom02.dojosession.base.dao.BaseDAO;
 import mr2.meetingroom02.dojosession.department.entity.Department;

@@ -1,12 +1,11 @@
-package mr2.meetingroom02.dojosession.employee;
+package mr2.meetingroom02.dojosession.employee.dao;
 
 import mr2.meetingroom02.dojosession.base.dao.BaseDAO;
 import mr2.meetingroom02.dojosession.base.exception.NotFoundException;
-import mr2.meetingroom02.dojosession.department.DepartmentDAO;
+import mr2.meetingroom02.dojosession.department.dao.DepartmentDAO;
 import mr2.meetingroom02.dojosession.department.entity.Department;
 import mr2.meetingroom02.dojosession.employee.entity.Employee;
 import mr2.meetingroom02.dojosession.employee.entity.Gender;
-import org.hibernate.Session;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -18,7 +17,6 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static mr2.meetingroom02.dojosession.base.exception.message.DepartmentExceptionMessage.DEPARTMENT_NOT_FOUND;
 

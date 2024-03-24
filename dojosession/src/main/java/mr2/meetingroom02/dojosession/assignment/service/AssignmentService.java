@@ -2,10 +2,8 @@ package mr2.meetingroom02.dojosession.assignment.service;
 
 import mr2.meetingroom02.dojosession.assignment.dao.AssignmentDAO;
 import mr2.meetingroom02.dojosession.assignment.entity.CreateEmployeeAssignmentDTO;
-import mr2.meetingroom02.dojosession.employee.EmployeeDAO;
-import mr2.meetingroom02.dojosession.employee.dto.EmployeeResponseDTO;
+import mr2.meetingroom02.dojosession.employee.dao.EmployeeDAO;
 import mr2.meetingroom02.dojosession.employee.entity.Employee;
-import mr2.meetingroom02.dojosession.employee.service.EmployeeService;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
