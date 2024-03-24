@@ -3,6 +3,7 @@ package mr2.meetingroom02.dojosession.lunch.dao;
 import mr2.meetingroom02.dojosession.base.dao.BaseDAO;
 import mr2.meetingroom02.dojosession.base.exception.NotFoundException;
 import mr2.meetingroom02.dojosession.lunch.dto.LunchScheduleResponseDTO;
+import mr2.meetingroom02.dojosession.lunch.entity.LunchOrder;
 import mr2.meetingroom02.dojosession.lunch.entity.LunchSchedule;
 import mr2.meetingroom02.dojosession.lunch.entity.Meal;
 import mr2.meetingroom02.dojosession.lunch.entity.Menu;
@@ -68,22 +69,20 @@ public class LunchScheduleDAO extends BaseDAO<LunchSchedule> {
 
     public List<Meal> getAllMealsSelectedWithinThisMonth() {
         try {
-            LocalDate currentDate = LocalDate.now();
-            int currentYear = currentDate.getYear();
-            int currentMonth = currentDate.getMonthValue();
-
-            TypedQuery<Meal> query = entityManager.createQuery(
-                    "SELECT meal FROM Meal meal " +
-                            "JOIN meal.menu menu " +
-                            "WHERE FUNCTION('YEAR', menu.date) = :year " +
-                            "AND FUNCTION('MONTH', menu.date) = :month", Meal.class
-            );
-            query.setParameter("year", currentYear);
-            query.setParameter("month", currentMonth);
-
-            List<Meal> meals = query.getResultList();
-            return meals;
+            TypedQuery<Meal> query = entityManager.createNamedQuery("mealsWithinTheCurrentMonth", Meal.class);
+            return query.getResultList();
         } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    public LunchOrder getLunchByOrderedByUser(Long employeeId, Long lunchScheduleId) {
+        try {
+            Query query = entityManager.createNamedQuery("getLunchOrderByEmployeeAndLunchScheduleId", LunchOrder.class)
+                    .setParameter("employeeId", employeeId)
+                    .setParameter("lunchScheduleId", lunchScheduleId);
+            return (LunchOrder) query.getSingleResult();
+        } catch (Exception e) {
             return null;
         }
     }

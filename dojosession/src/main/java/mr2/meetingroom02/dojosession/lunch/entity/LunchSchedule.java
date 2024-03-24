@@ -23,7 +23,8 @@ public class LunchSchedule extends BaseEntity {
     @JsonbDateFormat("yyyy-MM-dd")
     private LocalDate endDate;
 
-    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "lunchSchedule")
+    @OneToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    @JoinColumn(name = "menu_schedule_id")
     private List<Menu> menuList;
 
 }

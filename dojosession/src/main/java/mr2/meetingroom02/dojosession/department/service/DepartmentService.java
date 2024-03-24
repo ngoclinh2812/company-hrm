@@ -46,6 +46,6 @@ public class DepartmentService {
 
     public DepartmentDTO addNewDepartment(DepartmentDTO departmentDTO) {
         Department department = departmentMapper.toDeptEntity(departmentDTO);
-        return departmentMapper.toResponseDTO(departmentDAO.add(department));
+        return departmentMapper.toResponseDTO(departmentDAO.insert(department));
     }
 }

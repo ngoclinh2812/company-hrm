@@ -17,11 +17,8 @@ public class Menu extends BaseEntity {
 
     private LocalDate date;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "menu_schedule_id")
-    private LunchSchedule lunchSchedule;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "menu")
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    @JoinColumn(name = "menu_id")
     private List<Meal> meals;
 
 }

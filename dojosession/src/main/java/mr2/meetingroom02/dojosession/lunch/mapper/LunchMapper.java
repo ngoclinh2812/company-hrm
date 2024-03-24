@@ -1,4 +1,4 @@
-package mr2.meetingroom02.dojosession.lunch.service;
+package mr2.meetingroom02.dojosession.lunch.mapper;
 
 import mr2.meetingroom02.dojosession.lunch.dto.CreateLunchScheduleDTO;
 import mr2.meetingroom02.dojosession.lunch.dto.LunchScheduleResponseDTO;

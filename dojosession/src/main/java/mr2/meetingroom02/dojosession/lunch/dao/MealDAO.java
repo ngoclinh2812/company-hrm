@@ -7,6 +7,7 @@ import mr2.meetingroom02.dojosession.lunch.entity.Meal;
 import javax.ejb.Stateless;
 import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.Set;
 
 @Stateless
 public class MealDAO extends BaseDAO<Meal> {
@@ -22,5 +23,14 @@ public class MealDAO extends BaseDAO<Meal> {
         );
         query.setParameter("menuId", menuId);
         return query.getResultList();
+    }
+
+    public List<Meal> getMealsByIds(Set<Long> mealsId) {
+        TypedQuery<Meal> query = entityManager.createQuery(
+                "SELECT m FROM Meal m " +
+                        "WHERE m.id IN :listMealId", Meal.class)
+                .setParameter("listMealId", mealsId);
+        List<Meal> meals = query.getResultList();
+        return meals;
     }
 }

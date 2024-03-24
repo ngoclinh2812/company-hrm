@@ -19,4 +19,10 @@ public class EmployeeExceptionMessage {
 
     public static final String EMPLOYEE_NOT_FOUND = "Employee not found";
 
+    public static final String EMPLOYEE_HAS_ALREADY_ORDERED_THIS_LUNCH_SCHEDULE = "Employee has already ordered this schedule lunch";
+
+    public static String menuNotFoundInLunchSchedule(Long menuId) {
+        return String.format("Menu with id " + menuId + " is not found within the schedule");
+    }
+
 }

@@ -12,14 +12,21 @@ public class LunchScheduleExceptionMessage {
 
     public static final String START_DATE_IS_BEFORE_CURRENT_DATE = "Start date of the schedule must be after the current date";
 
+    public static final String ORDER_FOR_THIS_SCHEDULE_IS_CLOSED = "Orders for this lunch schedule is already closed";
     public static final String START_DATE_IS_AFTER_END_DATE = "Start date of schedule must be before end date";
 
     public static final String OVERLAP_LUNCH_SCHEDULE = "This lunch schedule is overlap with other ones";
 
+    public static final String DUPLICATED_MEAL_IN_MENU = "Duplicated meal was chosen in the menu";
 
     public static String menuDateOutOfLunchSchedulePeriod(LocalDate startDate, LocalDate endDate) {
         return String.format("Menu date must be inside lunch schedule, between " + startDate.toString() +
                 " and " + endDate.toString());
+    }
+
+    public static String mealNotFoundInMenu(Long mealId) {
+        return String.format("Meal " + mealId.toString() +
+                " is not found in the menu");
     }
 
     public static String lunchIsNotServedInWeekend(LocalDate menuDate) {

@@ -60,7 +60,7 @@ public class EmployeeService {
                 .isDeleted(false)
                 .build();
 
-        Employee savedEmp = employeeDAO.add(newEmployee);
+        Employee savedEmp = employeeDAO.insert(newEmployee);
 
         return employeeMapper.toEmployeeDTO(savedEmp);
 

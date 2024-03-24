@@ -2,11 +2,16 @@ package mr2.meetingroom02.dojosession.employee.service;
 
 import mr2.meetingroom02.dojosession.assignment.dao.AssignmentDAO;
 import mr2.meetingroom02.dojosession.employee.dao.EmployeeDAO;
+import mr2.meetingroom02.dojosession.employee.entity.Employee;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 class EmployeeServiceTest {
@@ -19,6 +24,12 @@ class EmployeeServiceTest {
 
     @InjectMocks
     private EmployeeService employeeService;
+
+    List<Employee> mockEmployees = Arrays.asList(
+            Employee.builder()
+                    .dateOfBirth(LocalDate.of(2004, 12, 12))
+                    .build()
+    );
 
 //    @Test
 //    public void getAllEmployees_Successfully() {

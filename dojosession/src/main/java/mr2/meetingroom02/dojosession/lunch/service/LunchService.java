@@ -4,27 +4,34 @@ import mr2.meetingroom02.dojosession.base.exception.BadRequestException;
 import mr2.meetingroom02.dojosession.base.exception.DuplicateException;
 import mr2.meetingroom02.dojosession.base.exception.NotFoundException;
 import mr2.meetingroom02.dojosession.base.exception.message.LunchScheduleExceptionMessage;
+import mr2.meetingroom02.dojosession.employee.dao.EmployeeDAO;
+import mr2.meetingroom02.dojosession.employee.entity.Employee;
+import mr2.meetingroom02.dojosession.lunch.dao.LunchOrderDAO;
 import mr2.meetingroom02.dojosession.lunch.dao.LunchScheduleDAO;
 import mr2.meetingroom02.dojosession.lunch.dao.MealDAO;
 import mr2.meetingroom02.dojosession.lunch.dao.MenuDAO;
-import mr2.meetingroom02.dojosession.lunch.dto.LunchOrderDTO;
+import mr2.meetingroom02.dojosession.lunch.dto.CreateLunchOrderDTO;
 import mr2.meetingroom02.dojosession.lunch.dto.CreateLunchScheduleDTO;
 import mr2.meetingroom02.dojosession.lunch.dto.LunchScheduleResponseDTO;
 import mr2.meetingroom02.dojosession.lunch.entity.LunchOrder;
 import mr2.meetingroom02.dojosession.lunch.entity.LunchSchedule;
 import mr2.meetingroom02.dojosession.lunch.entity.Meal;
 import mr2.meetingroom02.dojosession.lunch.entity.Menu;
+import mr2.meetingroom02.dojosession.lunch.mapper.LunchMapper;
 import org.hibernate.MappingException;
 
-import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import static mr2.meetingroom02.dojosession.base.exception.message.EmployeeExceptionMessage.*;
 import static mr2.meetingroom02.dojosession.base.exception.message.LunchScheduleExceptionMessage.*;
 
 public class LunchService {
@@ -42,26 +49,84 @@ public class LunchService {
     private MealDAO mealDAO;
 
     @Inject
+    private EmployeeDAO employeeDAO;
+
+    @Inject
     private LunchMapper lunchMapper;
 
+    @Inject
+    private LunchOrderDAO lunchOrderDAO;
+
+
     @Transactional
-    public LunchScheduleResponseDTO createLunchSchedule(CreateLunchScheduleDTO scheduleDTO) throws InternalError, MappingException, DuplicateException, BadRequestException {
-
+    public LunchScheduleResponseDTO createLunchSchedule(CreateLunchScheduleDTO scheduleDTO)
+            throws InternalError, MappingException, DuplicateException, BadRequestException {
+        checkValidDateSchedule(scheduleDTO.getStartDate(), scheduleDTO.getEndDate());
         LunchSchedule lunchSchedule = lunchMapper.toScheduleEntity(scheduleDTO);
-        checkValidDateSchedule(lunchSchedule.getStartDate(), lunchSchedule.getEndDate());
-        LunchSchedule savedLunchSchedule = lunchScheduleDAO.add(lunchSchedule);
-
         for (Menu menu : lunchSchedule.getMenuList()) {
             checkValidMenu(menu, lunchSchedule);
-            menu.setLunchSchedule(lunchSchedule);
             for (Meal meal : menu.getMeals()) {
                 checkDuplicatedMealWithinThisMonth(meal);
-                meal.setMenu(menu);
             }
         }
-
+         LunchSchedule savedLunchSchedule = lunchScheduleDAO.insert(lunchSchedule);
         return lunchMapper.toLunchScheduleDTO(savedLunchSchedule);
     }
+
+    @Transactional
+    public LunchOrder createLunchOrder(CreateLunchOrderDTO createLunchOrderDTO) throws BadRequestException {
+
+        LunchOrder lunchOrder = new LunchOrder();
+
+        //validate employee
+        Employee employee = employeeDAO.findById(createLunchOrderDTO.getEmployeeId())
+                .orElseThrow(() -> new BadRequestException(EMPLOYEE_NOT_FOUND));
+        lunchOrder.setEmployee(employee);
+
+        //validate lunch schedule
+        LunchSchedule selectedlunchSchedule = lunchScheduleDAO.findById(createLunchOrderDTO.getScheduleId())
+                .orElseThrow(() -> new BadRequestException(LUNCH_SCHEDULE_NOT_FOUND));
+        if (selectedlunchSchedule.getStartDate().isBefore(LocalDate.now())) {
+            throw new BadRequestException(ORDER_FOR_THIS_SCHEDULE_IS_CLOSED);
+        }
+        LunchOrder lunchByOrderedByUser = lunchScheduleDAO.getLunchByOrderedByUser(employee.getId(), selectedlunchSchedule.getId());
+        if (lunchByOrderedByUser != null) {
+            throw new BadRequestException(EMPLOYEE_HAS_ALREADY_ORDERED_THIS_LUNCH_SCHEDULE);
+        }
+        lunchOrder.setLunchSchedule(selectedlunchSchedule);
+
+        Set<Long> mealIdsAdded = new HashSet<>();
+
+        // Validate menus and meals
+        for (Map.Entry<Long, Long> entry : createLunchOrderDTO.getMenuMeal().entrySet()) {
+            Long menuId = entry.getKey();
+            Long mealId = entry.getValue();
+            Menu menu = menuDAO.getMenuInSchedule(selectedlunchSchedule.getStartDate(), selectedlunchSchedule.getEndDate(), menuId)
+                    .orElseThrow(() -> new BadRequestException(menuNotFoundInLunchSchedule(menuId)));
+
+            boolean mealFoundInMenu = menu.getMeals()
+                    .stream()
+                    .anyMatch(meal -> meal.getId().equals(mealId));
+            if (!mealFoundInMenu) {
+                throw new BadRequestException(mealNotFoundInMenu(mealId));
+            }
+            if (mealIdsAdded.contains(mealId)) {
+                throw new BadRequestException(DUPLICATED_MEAL_IN_MENU);
+            }
+
+            mealIdsAdded.add(mealId);
+            lunchOrder.setMenu(menu);
+            Meal meal = mealDAO.findById(mealId).orElseThrow();
+            lunchOrder.setMeal(meal);
+        }
+
+        LunchOrder savedLunchOrder = lunchOrderDAO.insert(lunchOrder);
+
+
+
+        return savedLunchOrder;
+    }
+
 
     public LunchScheduleResponseDTO getLunchScheduleById(Long scheduleId) throws NotFoundException {
         LunchSchedule lunchSchedule = lunchScheduleDAO.getScheduleLunch(scheduleId);
@@ -69,7 +134,6 @@ public class LunchService {
             throw new NotFoundException(LUNCH_SCHEDULE_NOT_FOUND);
         } else {
             List<Menu> menus = menuDAO.getAllByLunchScheduleId(lunchSchedule.getId());
-
             if (menus != null) {
                 for (Menu menu : menus) {
                     List<Meal> meals = mealDAO.getMealByMenuId(menu.getId());
@@ -87,10 +151,9 @@ public class LunchService {
         checkOverlapSchedule(startDate, endDate);
     }
 
-
     private void checkOverlapSchedule(LocalDate startDate, LocalDate endDate) throws BadRequestException {
         List<LunchSchedule> lunchSchedules = lunchScheduleDAO.findOverlapLunchSchedule(startDate, endDate);
-        if (lunchSchedules != null) {
+        if (!lunchSchedules.isEmpty()) {
             throw new BadRequestException(OVERLAP_LUNCH_SCHEDULE);
         }
     }
@@ -125,17 +188,13 @@ public class LunchService {
             throw new DuplicateException(LunchScheduleExceptionMessage.menuAlreadyExisted(date));
     }
 
-    public LunchOrder createLunchOrder(LunchOrderDTO lunchOrderDTO) {
-        return null;
-    }
-
-    public LunchScheduleResponseDTO getLunchScheduleByStartDateOrEndDate(LocalDate startDate, LocalDate endDate) {
-        if (startDate != null) {
-
-        }
-        if (endDate != null) {
-
-        }
-        return null;
-    }
+//    public LunchScheduleResponseDTO getLunchScheduleByStartDateOrEndDate(LocalDate startDate, LocalDate endDate) {
+//        if (startDate != null) {
+//
+//        }
+//        if (endDate != null) {
+//
+//        }
+//        return null;
+//    }
 }

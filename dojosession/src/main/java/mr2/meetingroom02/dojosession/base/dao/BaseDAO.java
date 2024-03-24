@@ -30,7 +30,7 @@ public abstract class BaseDAO<T extends BaseEntity> {
         return entityManager.createQuery(q).getResultList();
     }
 
-    public T add(T entity) {
+    public T insert(T entity) {
         entityManager.persist(entity);
         return entity;
     }
