@@ -1,0 +1,64 @@
+package mr2.meetingroom02.dojosession.lunch.service;
+
+import mr2.meetingroom02.dojosession.employee.dao.EmployeeDAO;
+import mr2.meetingroom02.dojosession.employee.entity.Employee;
+import mr2.meetingroom02.dojosession.lunch.dao.LunchOrderDAO;
+import mr2.meetingroom02.dojosession.lunch.dao.MenuDishDao;
+import mr2.meetingroom02.dojosession.lunch.dto.CreateLunchOrderRequestDTO;
+import mr2.meetingroom02.dojosession.lunch.dto.LunchOrderResponseDTO;
+import mr2.meetingroom02.dojosession.lunch.dto.response.DishResponseDto;
+import mr2.meetingroom02.dojosession.lunch.dto.response.MenuDishResponseDTO;
+import mr2.meetingroom02.dojosession.lunch.entity.LunchOrder;
+import mr2.meetingroom02.dojosession.lunch.entity.MenuDish;
+
+import javax.inject.Inject;
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
+
+public class LunchOrderService {
+
+    @Inject
+    private LunchOrderDAO lunchOrderDAO;
+
+    @Inject
+    private EmployeeDAO employeeDAO;
+
+    @Inject
+    private MenuDishDao menuDishDao;
+
+    public LunchOrderResponseDTO createLunchOrder(CreateLunchOrderRequestDTO createLunchOrderRequestDTO) {
+
+        Long employeeId = createLunchOrderRequestDTO.getEmployeeId();
+        Employee employee = employeeDAO.findById(employeeId).orElseThrow(() -> new IllegalArgumentException("Invalid employee id"));
+
+        List<MenuDishResponseDTO> menuDishResponseDTOS = new ArrayList<>();
+
+
+        createLunchOrderRequestDTO.getMenuDishId().forEach(menuDishId -> {
+            MenuDish menuDish = menuDishDao.findById(menuDishId).orElseThrow(() -> new IllegalArgumentException("Invalid Menu Dish id"));
+
+            LunchOrder lunchOrder = LunchOrder.builder()
+                    .employee(employee).
+                    menuDish(menuDish).build();
+
+            lunchOrderDAO.insert(lunchOrder);
+
+            DishResponseDto dishResponseDto = DishResponseDto.builder()
+                    .name(lunchOrder.getMenuDish().getDish().getName())
+                    .build();
+
+            menuDishResponseDTOS.add(MenuDishResponseDTO.builder()
+                    .menuDate(lunchOrder.getMenuDish().getMenu().getMenuDate())
+                    .dishResponseDto(dishResponseDto)
+                    .build());
+
+        });
+
+        return LunchOrderResponseDTO.builder().employeeId(employeeId)
+                .menuDishes(menuDishResponseDTOS)
+                .employeeId(employeeId)
+                .build();
+
+    }
+}
