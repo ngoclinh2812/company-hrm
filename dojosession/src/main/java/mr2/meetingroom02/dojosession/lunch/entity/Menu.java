@@ -15,10 +15,14 @@ import java.util.List;
 @Builder
 public class Menu extends BaseEntity {
 
-    private LocalDate date;
+    @Column(name = "menu_date")
+    private LocalDate menuDate;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
-    @JoinColumn(name = "menu_id")
-    private List<Meal> meals;
+    @OneToMany(mappedBy = "menu")
+    private List<MenuDish> menuDish;
+
+    @ManyToOne
+    @JoinColumn(name = "schedule_id")
+    private LunchSchedule lunchSchedule;
 
 }

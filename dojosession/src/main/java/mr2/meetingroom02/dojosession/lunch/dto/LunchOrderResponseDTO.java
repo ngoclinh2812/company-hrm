@@ -5,10 +5,13 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 import mr2.meetingroom02.dojosession.employee.dto.EmployeeResponseDTO;
-import mr2.meetingroom02.dojosession.lunch.entity.Meal;
+import mr2.meetingroom02.dojosession.lunch.dto.response.DishResponseDto;
+import mr2.meetingroom02.dojosession.lunch.dto.response.MenuDishResponseDTO;
+import mr2.meetingroom02.dojosession.lunch.entity.Dish;
 import mr2.meetingroom02.dojosession.lunch.entity.Menu;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -19,11 +22,8 @@ import java.util.Map;
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.LowerCamelCaseStrategy.class)
 public class LunchOrderResponseDTO {
-    private EmployeeResponseDTO employee;
+    private Long employeeId;
 
-    private LocalDate scheduleStartDate;
+    List<MenuDishResponseDTO> menuDishes;
 
-    private LocalDate scheduleEndDate;
-
-    private Map<Menu, Meal> menuMeals;
 }

@@ -3,9 +3,9 @@ package mr2.meetingroom02.dojosession.lunch.dao;
 import mr2.meetingroom02.dojosession.base.dao.BaseDAO;
 import mr2.meetingroom02.dojosession.base.exception.NotFoundException;
 import mr2.meetingroom02.dojosession.lunch.dto.LunchScheduleResponseDTO;
+import mr2.meetingroom02.dojosession.lunch.entity.Dish;
 import mr2.meetingroom02.dojosession.lunch.entity.LunchOrder;
 import mr2.meetingroom02.dojosession.lunch.entity.LunchSchedule;
-import mr2.meetingroom02.dojosession.lunch.entity.Meal;
 import mr2.meetingroom02.dojosession.lunch.entity.Menu;
 
 import javax.ejb.Stateless;
@@ -67,9 +67,9 @@ public class LunchScheduleDAO extends BaseDAO<LunchSchedule> {
         }
     }
 
-    public List<Meal> getAllMealsSelectedWithinThisMonth() {
+    public List<Dish> getAllMealsSelectedWithinThisMonth() {
         try {
-            TypedQuery<Meal> query = entityManager.createNamedQuery("mealsWithinTheCurrentMonth", Meal.class);
+            TypedQuery<Dish> query = entityManager.createNamedQuery("mealsWithinTheCurrentMonth", Dish.class);
             return query.getResultList();
         } catch (NoResultException e) {
             return null;

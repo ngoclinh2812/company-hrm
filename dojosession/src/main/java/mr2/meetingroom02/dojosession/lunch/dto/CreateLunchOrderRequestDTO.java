@@ -6,15 +6,15 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Map;
 
 @Getter
 @Setter
 @JsonNaming(PropertyNamingStrategies.LowerCamelCaseStrategy.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CreateLunchOrderDTO {
+public class CreateLunchOrderRequestDTO {
 
     private Long employeeId;
-    private Long scheduleId;
-    private Map<Long, Long> menuMeal;
+    private List<Long> menuDishId;
 }

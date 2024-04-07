@@ -32,6 +32,5 @@ public class CreateLunchScheduleDTO implements Serializable {
     @NotNull
     private LocalDate endDate;
 
-    private List<MenuDTO> menuList;
 
 }

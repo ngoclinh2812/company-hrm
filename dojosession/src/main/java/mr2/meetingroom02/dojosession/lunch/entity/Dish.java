@@ -5,6 +5,7 @@ import mr2.meetingroom02.dojosession.base.entity.BaseEntity;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -17,10 +18,20 @@ import java.util.List;
                 "FROM Meal meal " +
                 "JOIN Menu menu ON meal.menu_id = menu.id " +
                 "WHERE date_trunc('month', menu.date) = date_trunc('month', current_date)",
-        resultClass = Meal.class
+        resultClass = Dish.class
 )
-public class Meal extends BaseEntity {
+public class Dish extends BaseEntity {
 
+    @Column(name = "dish_name")
     private String name;
 
+    @Column(name = "calories")
+    private Integer calories;
+
+    @ManyToOne
+    @JoinColumn(name = "protein_id")
+    private Protein protein;
+
+    @OneToMany(mappedBy = "dish")
+    private Set<MenuDish> menuDishes;
 }

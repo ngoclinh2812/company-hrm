@@ -5,7 +5,6 @@ import mr2.meetingroom02.dojosession.base.entity.BaseEntity;
 import mr2.meetingroom02.dojosession.employee.entity.Employee;
 
 import javax.persistence.*;
-import java.util.Map;
 
 @Getter
 @Setter
@@ -25,18 +24,11 @@ import java.util.Map;
 public class LunchOrder extends BaseEntity {
 
     @ManyToOne
+    @JoinColumn(name = "employee_id")
     private Employee employee;
 
     @ManyToOne
-    @JoinColumn(name = "schedule_id")
-    private LunchSchedule lunchSchedule;
-
-    @ManyToOne
-    @JoinColumn(name = "meal_id")
-    private Meal meal;
-
-    @ManyToOne
-    @JoinColumn(name = "menu_id")
-    private Menu menu;
+    @JoinColumn(name = "menu_dish_id")
+    private MenuDish menuDish;
 
 }
