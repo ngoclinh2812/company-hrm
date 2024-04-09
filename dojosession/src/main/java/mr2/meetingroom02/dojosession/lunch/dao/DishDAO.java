@@ -4,6 +4,7 @@ import mr2.meetingroom02.dojosession.base.dao.BaseDAO;
 import mr2.meetingroom02.dojosession.lunch.entity.Dish;
 
 import javax.ejb.Stateless;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Set;
@@ -32,4 +33,15 @@ public class DishDAO extends BaseDAO<Dish> {
         List<Dish> meals = query.getResultList();
         return meals;
     }
+
+    public List<Dish> getAllMealsSelectedWithinThisMonth() {
+        try {
+            TypedQuery<Dish> query = entityManager.createNamedQuery("mealsWithinTheCurrentMonth", Dish.class);
+            return query.getResultList();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+
 }

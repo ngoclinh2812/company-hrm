@@ -14,7 +14,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
-import java.util.List;
 
 @Path("lunch-schedule")
 @Produces({MediaType.APPLICATION_JSON})
@@ -36,23 +35,19 @@ public class LunchScheduleResource {
 
     @POST
     @Path("/lunch-schedule")
-    public Response createLunchSchedule(@Valid CreateLunchScheduleDTO createLunchScheduleDTO) throws DuplicateException, BadRequestException {
+    public Response createLunchMenu(@Valid CreateLunchScheduleDTO createLunchScheduleDTO) throws DuplicateException, BadRequestException {
         LunchScheduleResponseDTO responseDTO = lunchScheduleService.createLunchSchedule(createLunchScheduleDTO);
         return Response.created(URI.create("lunch/" + responseDTO.getId())).entity(responseDTO).build();
     }
 
-    //TODO: Get list order meals of upcoming week
-
     @POST
     @Path("/{lunchScheduleId}/menu")
-    //TODO: Import list
-    public Response createLunchSchedule(@Valid CreateMenuRequestDTO createMenuRequestDTO,
-                                        @PathParam("lunchScheduleId") Long lunchId
+    //TODO: Import list from excel file
+    public Response createLunchMenu(@Valid CreateMenuRequestDTO createMenuRequestDTO,
+                                    @PathParam("lunchScheduleId") Long lunchId
     ) throws DuplicateException, BadRequestException, NotFoundException {
         MenuResponseDTO responseDTO = menuService.createMenu(createMenuRequestDTO, lunchId);
         return Response.created(URI.create("lunch/" + responseDTO.getId())).entity(responseDTO).build();
     }
-
-    //TODO: Add file csv to create lunch schedule by month
 
 }

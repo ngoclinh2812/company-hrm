@@ -6,8 +6,6 @@ import mr2.meetingroom02.dojosession.base.entity.BaseEntity;
 import javax.json.bind.annotation.JsonbDateFormat;
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
 
 @Getter
 @Setter
@@ -22,5 +20,8 @@ public class LunchSchedule extends BaseEntity {
 
     @JsonbDateFormat("yyyy-MM-dd")
     private LocalDate endDate;
+
+    @JsonbDateFormat("yyyy-MM-dd")
+    private LocalDate orderDeadline;
 
 }

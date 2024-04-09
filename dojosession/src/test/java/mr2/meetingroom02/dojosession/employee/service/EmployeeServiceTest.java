@@ -1,6 +1,5 @@
 package mr2.meetingroom02.dojosession.employee.service;
 
-import mr2.meetingroom02.dojosession.assignment.dao.AssignmentDAO;
 import mr2.meetingroom02.dojosession.employee.dao.EmployeeDAO;
 import mr2.meetingroom02.dojosession.employee.entity.Employee;
 import org.junit.jupiter.api.Test;
@@ -18,9 +17,6 @@ class EmployeeServiceTest {
 
     @Mock
     private EmployeeDAO employeeDAO;
-
-    @Mock
-    private AssignmentDAO assignmentDAO;
 
     @InjectMocks
     private EmployeeService employeeService;

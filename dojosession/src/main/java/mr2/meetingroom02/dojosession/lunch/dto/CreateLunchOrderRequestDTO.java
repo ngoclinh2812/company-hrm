@@ -16,5 +16,6 @@ import java.util.Map;
 public class CreateLunchOrderRequestDTO {
 
     private Long employeeId;
+    private Long lunchScheduleId;
     private List<Long> menuDishId;
 }

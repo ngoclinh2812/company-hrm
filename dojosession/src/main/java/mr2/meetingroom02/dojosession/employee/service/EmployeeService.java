@@ -15,6 +15,8 @@ import org.apache.logging.log4j.Logger;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.TypedQuery;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 import static mr2.meetingroom02.dojosession.base.exception.message.DepartmentExceptionMessage.DEPARTMENT_NOT_FOUND;
@@ -111,4 +113,7 @@ public class EmployeeService {
     }
 
 
+    public Employee getEmployeeByEmail(String email) {
+        return employeeDAO.findEmployeeByEmail(email);
+    }
 }

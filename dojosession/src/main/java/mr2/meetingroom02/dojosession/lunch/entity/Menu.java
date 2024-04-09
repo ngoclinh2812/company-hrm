@@ -15,7 +15,7 @@ import java.util.List;
 @Builder
 public class Menu extends BaseEntity {
 
-    @Column(name = "menu_date")
+    @Column(name = "menu_date", unique = true)
     private LocalDate menuDate;
 
     @OneToMany(mappedBy = "menu")

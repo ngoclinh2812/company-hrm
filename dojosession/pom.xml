@@ -16,6 +16,10 @@
     <war-plugin.version>3.3.2</war-plugin.version>
     <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
     <lombok.version>1.18.30</lombok.version>
+    <java-jwt-version>4.4.0</java-jwt-version>
+    <jbcrypt-version>0.4</jbcrypt-version>
+    <hibernate-validator-version>6.2.5.Final</hibernate-validator-version>
+    <commons-collections4-version>4.1</commons-collections4-version>
   </properties>
 
   <dependencies>
@@ -54,13 +58,6 @@
       <artifactId>mapstruct</artifactId>
       <version>${org.mapstruct.version}</version>
     </dependency>
-
-    <!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
-    <!--    <dependency>-->
-    <!--      <groupId>org.mapstruct</groupId>-->
-    <!--      <artifactId>mapstruct</artifactId>-->
-    <!--      <version>1.5.5.Final</version>-->
-    <!--    </dependency>-->
 
     <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
     <dependency>
@@ -135,6 +132,57 @@
       <artifactId>jackson-databind</artifactId>
       <version>2.14.0-rc1</version>
     </dependency>
+
+    <dependency>
+      <groupId>com.auth0</groupId>
+      <artifactId>java-jwt</artifactId>
+      <version>${java-jwt-version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mindrot</groupId>
+      <artifactId>jbcrypt</artifactId>
+      <version>${jbcrypt-version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <version>${hibernate-validator-version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-collections4</artifactId>
+      <version>${commons-collections4-version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi</artifactId>
+      <version>5.2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-ooxml</artifactId>
+      <version>5.2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jxls</groupId>
+      <artifactId>jxls-jexcel</artifactId>
+      <version>1.0.9</version>
+    </dependency>
+    <dependency>
+      <groupId>org.dhatim</groupId>
+      <artifactId>fastexcel-reader</artifactId>
+      <version>0.15.3</version>
+    </dependency>
+    <dependency>
+      <groupId>org.dhatim</groupId>
+      <artifactId>fastexcel</artifactId>
+      <version>0.15.3</version>
+    </dependency>
+
 
   </dependencies>
 

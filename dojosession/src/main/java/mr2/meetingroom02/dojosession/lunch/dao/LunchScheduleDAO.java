@@ -47,10 +47,6 @@ public class LunchScheduleDAO extends BaseDAO<LunchSchedule> {
         ).setParameter("id", scheduleId).getSingleResult();
     }
 
-    public Menu getMenuByDate(LocalDate date) {
-        return null;
-    }
-
     public List<LunchSchedule> findOverlapLunchSchedule(LocalDate startDate, LocalDate endDate) {
         try {
             TypedQuery<LunchSchedule> query = entityManager.createQuery(
@@ -62,15 +58,6 @@ public class LunchScheduleDAO extends BaseDAO<LunchSchedule> {
                 .setParameter("endDate", endDate);
             List<LunchSchedule> lunchSchedules = query.getResultList();
             return lunchSchedules;
-        } catch (NoResultException e) {
-            return null;
-        }
-    }
-
-    public List<Dish> getAllMealsSelectedWithinThisMonth() {
-        try {
-            TypedQuery<Dish> query = entityManager.createNamedQuery("mealsWithinTheCurrentMonth", Dish.class);
-            return query.getResultList();
         } catch (NoResultException e) {
             return null;
         }

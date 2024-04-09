@@ -5,6 +5,7 @@ import mr2.meetingroom02.dojosession.department.entity.Department;
 import mr2.meetingroom02.dojosession.lunch.entity.Menu;
 
 import javax.ejb.Stateless;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.time.LocalDate;
@@ -13,6 +14,7 @@ import java.util.Optional;
 
 @Stateless
 public class MenuDAO extends BaseDAO<Menu> {
+
     public MenuDAO() {
         super(Menu.class);
     }
@@ -38,5 +40,16 @@ public class MenuDAO extends BaseDAO<Menu> {
             e.printStackTrace();
         }
         return Optional.empty();
+    }
+
+    public Menu getMenuByDate(LocalDate date) {
+        try {
+            TypedQuery<Menu> query = entityManager.createQuery(
+                    "SELECT m FROM Menu m WHERE m.menuDate = :date", Menu.class
+            ).setParameter("date", date);
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null; // Return null when no result is found
+        }
     }
 }
