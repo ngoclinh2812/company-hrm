@@ -34,7 +34,6 @@ public class LunchScheduleResource {
     }
 
     @POST
-    @Path("/lunch-schedule")
     public Response createLunchMenu(@Valid CreateLunchScheduleDTO createLunchScheduleDTO) throws DuplicateException, BadRequestException {
         LunchScheduleResponseDTO responseDTO = lunchScheduleService.createLunchSchedule(createLunchScheduleDTO);
         return Response.created(URI.create("lunch/" + responseDTO.getId())).entity(responseDTO).build();

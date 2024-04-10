@@ -3,8 +3,10 @@ package mr2.meetingroom02.dojosession.lunch.entity;
 import lombok.*;
 import mr2.meetingroom02.dojosession.base.entity.BaseEntity;
 import mr2.meetingroom02.dojosession.employee.entity.Employee;
+import mr2.meetingroom02.dojosession.lunch.dto.UpcomingWeekMealsDTO;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -19,6 +21,18 @@ import javax.persistence.*;
                 "join lunch_schedule ls on ls.id = lo.schedule_id " +
                 "where e.id = :employeeId and ls.id = :lunchScheduleId",
         resultClass = LunchOrder.class
+)
+@SqlResultSetMapping(
+        name = "UpcomingWeekMealsDTOMapping",
+        classes = @ConstructorResult(
+                targetClass = UpcomingWeekMealsDTO.class,
+                columns = {
+                        @ColumnResult(name = "menu_date", type = LocalDate.class),
+                        @ColumnResult(name = "department_name"),
+                        @ColumnResult(name = "dish_name"),
+                        @ColumnResult(name = "count", type = Long.class)
+                }
+        )
 )
 @Table(name = "lunch_order")
 public class LunchOrder extends BaseEntity {

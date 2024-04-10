@@ -17,8 +17,6 @@ public class LunchScheduleExceptionMessage {
 
     public static final String OVERLAP_LUNCH_SCHEDULE = "This lunch schedule is overlap with other ones";
 
-    public static final String DUPLICATED_MEAL_IN_MENU = "Duplicated meal was chosen in the menu";
-
     public static String menuDateOutOfLunchSchedulePeriod(LocalDate startDate, LocalDate endDate) {
         return String.format("Menu date must be inside lunch schedule, between " + startDate.toString() +
                 " and " + endDate.toString());

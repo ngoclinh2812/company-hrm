@@ -79,7 +79,7 @@ public class LunchScheduleService {
 
     public byte[] exportExcelMealsInUpcomingWeek() throws IOException {
         List<UpcomingWeekMealsDTO> upcomingWeekMealsDTOS = lunchOrderDAO.getNextWeekOrderList();
-        byte[] file = excelExporter.exportToExcel(upcomingWeekMealsDTOS, String.format("axonactive_lunch_schedule"));
+        byte[] file = excelExporter.exportToExcel(upcomingWeekMealsDTOS);
         return file;
     }
 }

@@ -52,13 +52,4 @@ public class Employee extends BaseEntity {
     @JoinColumn(name="department_id")
     private Department department;
 
-    @Column(nullable = false)
-    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-zA-Z]).{6,}$")
-    private String password;
-
-    @Column
-    @Enumerated(EnumType.STRING)
-    private RoleEnum role;
-
-    private StatusEnum status;
 }

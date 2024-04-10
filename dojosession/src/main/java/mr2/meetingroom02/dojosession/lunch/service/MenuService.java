@@ -41,9 +41,6 @@ public class MenuService {
     private MenuDishDao menuDishDao;
 
     @Inject
-    private MenuMapper menuMapper;
-
-    @Inject
     private LunchScheduleDAO lunchScheduleDAO;
 
     public MenuResponseDTO createMenu(CreateMenuRequestDTO createMenuRequestDTO, Long lunchId) throws NotFoundException, DuplicateException, BadRequestException {

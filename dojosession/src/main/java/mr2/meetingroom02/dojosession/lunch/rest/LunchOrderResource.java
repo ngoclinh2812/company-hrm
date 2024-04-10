@@ -21,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Consumes({MediaType.APPLICATION_JSON})
+@Path("/lunch-orders")
 public class LunchOrderResource {
 
     @Inject
@@ -30,7 +31,7 @@ public class LunchOrderResource {
     LunchScheduleService lunchScheduleService;
 
     @GET
-    @Path("/lunch-orders/upcoming-week")
+    @Path("/upcoming-week")
     @Produces({MediaType.APPLICATION_JSON})
     public Response getAllMealsInUpcomingWeek() {
         List<UpcomingWeekMealsDTO> responseDTOs = lunchScheduleService.getMealsOfEachDepartmentInUpcomingWeek();
@@ -38,17 +39,16 @@ public class LunchOrderResource {
     }
 
     @GET
-    @Path("/lunch-orders/upcoming-week/export-excel")
+    @Path("/upcoming-week/export-excel")
     @Produces({MediaType.APPLICATION_OCTET_STREAM})
     public Response ExportExcelMealsInUpcomingWeek() throws IOException {
         byte[] outputStream = lunchScheduleService.exportExcelMealsInUpcomingWeek();
         return Response.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment;filename=" + String.format("lunch_schedule_" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")) + ".xlsx"))
+                        "attachment;filename=" + String.format("aavn_lunch_schedule_" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")) + ".xlsx"))
                 .entity(outputStream).build();
     }
 
     @POST
-    @Path("/lunch-order")
     @Produces({MediaType.APPLICATION_JSON})
     public Response createOrder(@Valid CreateLunchOrderRequestDTO createLunchOrderRequestDTOs) throws NotFoundException, BadRequestException {
         LunchOrderResponseDTO lunchOrders = lunchOrderService.createLunchOrder(createLunchOrderRequestDTOs);
