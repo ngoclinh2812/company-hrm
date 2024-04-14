@@ -6,6 +6,7 @@ import mr2.meetingroom02.dojosession.department.entity.Department;
 
 import javax.json.bind.annotation.JsonbDateFormat;
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
@@ -52,4 +53,15 @@ public class Employee extends BaseEntity {
     @JoinColumn(name="department_id")
     private Department department;
 
+    @Column(nullable = false)
+    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-zA-Z]).{6,}$")
+    private String password;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private StatusEnum status;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private RoleEnum role;
 }

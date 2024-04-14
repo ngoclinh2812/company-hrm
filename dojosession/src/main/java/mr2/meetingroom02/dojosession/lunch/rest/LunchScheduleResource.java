@@ -1,16 +1,23 @@
 package mr2.meetingroom02.dojosession.lunch.rest;
 
+import mr2.meetingroom02.dojosession.auth.utility.JwtUtils;
 import mr2.meetingroom02.dojosession.base.exception.BadRequestException;
 import mr2.meetingroom02.dojosession.base.exception.DuplicateException;
 import mr2.meetingroom02.dojosession.base.exception.NotFoundException;
+import mr2.meetingroom02.dojosession.employee.entity.RoleEnum;
 import mr2.meetingroom02.dojosession.lunch.dto.*;
 import mr2.meetingroom02.dojosession.lunch.dto.response.MenuResponseDTO;
 import mr2.meetingroom02.dojosession.lunch.service.LunchScheduleService;
 import mr2.meetingroom02.dojosession.lunch.service.MenuService;
+import org.apache.maven.wagon.authorization.AuthorizationException;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.ws.rs.*;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
@@ -26,6 +33,9 @@ public class LunchScheduleResource {
     @Inject
     private MenuService menuService;
 
+    @Inject
+    private JwtUtils jwtUtils;
+
     @GET
     @Path("/{id}")
     public Response getLunchSchedule(@PathParam(value = "id") Long scheduleId) throws NotFoundException {
@@ -34,16 +44,19 @@ public class LunchScheduleResource {
     }
 
     @POST
-    public Response createLunchMenu(@Valid CreateLunchScheduleDTO createLunchScheduleDTO) throws DuplicateException, BadRequestException {
+    @RolesAllowed({"ROLE_ADMIN"})
+    public Response createLunchSchedule(
+            @Valid CreateLunchScheduleDTO createLunchScheduleDTO) throws BadRequestException {
         LunchScheduleResponseDTO responseDTO = lunchScheduleService.createLunchSchedule(createLunchScheduleDTO);
         return Response.created(URI.create("lunch/" + responseDTO.getId())).entity(responseDTO).build();
     }
 
     @POST
     @Path("/{lunchScheduleId}/menu")
-    //TODO: Import list from excel file
-    public Response createLunchMenu(@Valid CreateMenuRequestDTO createMenuRequestDTO,
-                                    @PathParam("lunchScheduleId") Long lunchId
+    @RolesAllowed({"ROLE_ADMIN"})
+    public Response createLunchScheduleMenu(
+            @Valid CreateMenuRequestDTO createMenuRequestDTO,
+            @PathParam("lunchScheduleId") Long lunchId
     ) throws DuplicateException, BadRequestException, NotFoundException {
         MenuResponseDTO responseDTO = menuService.createMenu(createMenuRequestDTO, lunchId);
         return Response.created(URI.create("lunch/" + responseDTO.getId())).entity(responseDTO).build();

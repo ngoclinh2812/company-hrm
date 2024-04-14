@@ -112,7 +112,6 @@ public class EmployeeService {
         }
     }
 
-
     public Employee getEmployeeByEmail(String email) {
         return employeeDAO.findEmployeeByEmail(email);
     }

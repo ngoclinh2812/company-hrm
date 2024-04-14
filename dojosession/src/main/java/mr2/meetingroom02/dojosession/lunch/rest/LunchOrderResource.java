@@ -8,6 +8,7 @@ import mr2.meetingroom02.dojosession.lunch.dto.UpcomingWeekMealsDTO;
 import mr2.meetingroom02.dojosession.lunch.service.LunchOrderService;
 import mr2.meetingroom02.dojosession.lunch.service.LunchScheduleService;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.*;
@@ -49,8 +50,10 @@ public class LunchOrderResource {
     }
 
     @POST
+    @RolesAllowed({"ROLE_ADMIN"})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response createOrder(@Valid CreateLunchOrderRequestDTO createLunchOrderRequestDTOs) throws NotFoundException, BadRequestException {
+    public Response createOrder(
+            @Valid CreateLunchOrderRequestDTO createLunchOrderRequestDTOs) throws NotFoundException, BadRequestException {
         LunchOrderResponseDTO lunchOrders = lunchOrderService.createLunchOrder(createLunchOrderRequestDTOs);
         return Response.created(URI.create("lunch-order")).entity(lunchOrders).build();
     }

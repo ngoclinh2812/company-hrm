@@ -20,6 +20,7 @@ import java.util.List;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Path("employees")
 //TODO: 401, 500, 403, 404 - create and test exceptions one by one, entity Not Found, bad request, internal server error
 public class EmployeeResource {
 
@@ -30,7 +31,6 @@ public class EmployeeResource {
 //    private static final Logger logger = LogManager.getLogger(EmployeeResource.class);
 
     @GET
-    @Path("employees")
     public Response getEmployeesByCategory(@QueryParam("gender") String gender,
                                            @QueryParam("dept_id") Long departmentId,
                                            @QueryParam("page_number") Long pageNumber,
@@ -40,7 +40,6 @@ public class EmployeeResource {
     }
 
     @POST
-    @Path("employee")
     public Response addNewEmployee(@Valid EmployeeCreateRequestDTO employeeCreateRequestDTO) throws BadRequestException, NotFoundException, DuplicateException {
         EmployeeResponseDTO createdEmployee = employeeService.add(employeeCreateRequestDTO);
         return Response.created(URI.create("employees/" + createdEmployee.getId())).entity(createdEmployee).build();
@@ -56,11 +55,10 @@ public class EmployeeResource {
     }
 
     @DELETE
-    @Path("/employee/{employeeId}")
+    @Path("/{employeeId}")
     public Response deleteEmployee(@PathParam("employeeId") Long employeeId) throws NotFoundException {
         employeeService.remove(employeeId);
         return Response.noContent().build();
     }
 
-    //TODO: Import csv files to add list of employees into a dept (optional)
 }
