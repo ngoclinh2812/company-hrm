@@ -15,7 +15,6 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CreateLunchOrderRequestDTO {
 
-    private Long employeeId;
     private Long lunchScheduleId;
     private List<Long> menuDishId;
 }

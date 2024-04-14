@@ -20,9 +20,11 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.Context;
 
 @Consumes({MediaType.APPLICATION_JSON})
-@Path("/lunch-orders")
+@Path("/lunch-order")
 public class LunchOrderResource {
 
     @Inject
@@ -53,8 +55,10 @@ public class LunchOrderResource {
     @RolesAllowed({"ROLE_ADMIN"})
     @Produces({MediaType.APPLICATION_JSON})
     public Response createOrder(
+            @Context ContainerRequestContext requestContext,
             @Valid CreateLunchOrderRequestDTO createLunchOrderRequestDTOs) throws NotFoundException, BadRequestException {
-        LunchOrderResponseDTO lunchOrders = lunchOrderService.createLunchOrder(createLunchOrderRequestDTOs);
+        String emloyeeEmail = (String) requestContext.getProperty("email");
+        LunchOrderResponseDTO lunchOrders = lunchOrderService.createLunchOrder(createLunchOrderRequestDTOs, emloyeeEmail);
         return Response.created(URI.create("lunch-order")).entity(lunchOrders).build();
     }
 

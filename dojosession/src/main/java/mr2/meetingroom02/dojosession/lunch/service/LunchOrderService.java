@@ -32,13 +32,11 @@ public class LunchOrderService {
     @Inject
     private LunchScheduleDAO lunchScheduleDAO;
 
-    public LunchOrderResponseDTO createLunchOrder(CreateLunchOrderRequestDTO createLunchOrderRequestDTO) throws NotFoundException, BadRequestException {
+    public LunchOrderResponseDTO createLunchOrder(CreateLunchOrderRequestDTO createLunchOrderRequestDTO, String employeeEmail) throws NotFoundException, BadRequestException {
 
         checkLunchScheduleOrderDeadline(createLunchOrderRequestDTO);
         
-        Long employeeId = createLunchOrderRequestDTO.getEmployeeId();
-        Employee employee = employeeDAO.findById(employeeId)
-                .orElseThrow(() -> new NotFoundException("Invalid employee id"));
+        Employee employee = employeeDAO.findEmployeeByEmail(employeeEmail);
 
         List<MenuDishResponseDTO> menuDishResponseDTOS = new ArrayList<>();
 
@@ -67,9 +65,9 @@ public class LunchOrderService {
 
         });
 
-        return LunchOrderResponseDTO.builder().employeeId(employeeId)
+        return LunchOrderResponseDTO.builder()
+                .employeeId(employee.getId())
                 .menuDishes(menuDishResponseDTOS)
-                .employeeId(employeeId)
                 .build();
 
     }

@@ -82,5 +82,10 @@ public class LunchScheduleService {
         byte[] file = excelExporter.exportToExcel(upcomingWeekMealsDTOS);
         return file;
     }
+
+    public List<LunchScheduleResponseDTO> getLunchScheduleUpcomingWeek() {
+        List<LunchSchedule> lunchSchedules = lunchScheduleDAO.getLunchScheduleUpcomingWeek();
+        return lunchScheduleMapper.toLunchScheduleDTO(lunchSchedules);
+    }
 }
 

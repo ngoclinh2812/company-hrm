@@ -33,10 +33,10 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     private static final Map<String, String[]> API_ROLES_CONFIG = new HashMap<>();
 
     static {
-        API_ROLES_CONFIG.put("/lunch-order", new String[]{"ROLE_ADMIN", "ROLE_USER"});
         API_ROLES_CONFIG.put("/lunch-schedule", new String[]{"ROLE_ADMIN"});
         API_ROLES_CONFIG.put("/lunch-schedule/*/menu", new String[]{"ROLE_ADMIN"});
         API_ROLES_CONFIG.put("/lunch-schedule/*", new String[]{"ROLE_ADMIN", "ROLE_USER"});
+        API_ROLES_CONFIG.put("/lunch-order", new String[]{"ROLE_ADMIN", "ROLE_USER"});
         API_ROLES_CONFIG.put("/employees", new String[]{"ROLE_ADMIN", "ROLE_USER"});
         API_ROLES_CONFIG.put("/departments", new String[]{"ROLE_ADMIN", "ROLE_USER"});
     }

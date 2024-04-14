@@ -1,6 +1,7 @@
 package mr2.meetingroom02.dojosession.lunch.dto;
 
 import lombok.*;
+import mr2.meetingroom02.dojosession.lunch.dto.response.MenuDishResponseDTO;
 import mr2.meetingroom02.dojosession.lunch.entity.Menu;
 
 import javax.json.bind.annotation.JsonbDateFormat;
@@ -18,6 +19,6 @@ public class MenuDTO implements Serializable {
     @JsonbDateFormat("yyyy-MM-dd")
     private LocalDate date;
 
-    private List<MealDTO> meals;
+    private List<MenuDishResponseDTO> meals;
 
 }

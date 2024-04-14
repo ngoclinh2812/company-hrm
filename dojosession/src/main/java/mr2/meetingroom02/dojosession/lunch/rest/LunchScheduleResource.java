@@ -4,23 +4,19 @@ import mr2.meetingroom02.dojosession.auth.utility.JwtUtils;
 import mr2.meetingroom02.dojosession.base.exception.BadRequestException;
 import mr2.meetingroom02.dojosession.base.exception.DuplicateException;
 import mr2.meetingroom02.dojosession.base.exception.NotFoundException;
-import mr2.meetingroom02.dojosession.employee.entity.RoleEnum;
 import mr2.meetingroom02.dojosession.lunch.dto.*;
 import mr2.meetingroom02.dojosession.lunch.dto.response.MenuResponseDTO;
 import mr2.meetingroom02.dojosession.lunch.service.LunchScheduleService;
 import mr2.meetingroom02.dojosession.lunch.service.MenuService;
-import org.apache.maven.wagon.authorization.AuthorizationException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.ws.rs.*;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.List;
 
 @Path("lunch-schedule")
 @Produces({MediaType.APPLICATION_JSON})
@@ -38,8 +34,16 @@ public class LunchScheduleResource {
 
     @GET
     @Path("/{id}")
-    public Response getLunchSchedule(@PathParam(value = "id") Long scheduleId) throws NotFoundException {
+    public Response getLunchScheduleById(@PathParam(value = "id") Long scheduleId) throws NotFoundException {
         LunchScheduleResponseDTO responseDTO = lunchScheduleService.getLunchScheduleById(scheduleId);
+        return Response.ok().entity(responseDTO).build();
+    }
+
+    //TODO: Not completed
+    @GET
+    @Path("/next-week")
+    public Response getLunchScheduleUpcomingWeek() throws NotFoundException {
+        List<LunchScheduleResponseDTO> responseDTO = lunchScheduleService.getLunchScheduleUpcomingWeek();
         return Response.ok().entity(responseDTO).build();
     }
 
@@ -54,6 +58,7 @@ public class LunchScheduleResource {
     @POST
     @Path("/{lunchScheduleId}/menu")
     @RolesAllowed({"ROLE_ADMIN"})
+    //TODO: handle the dish / protein duplication
     public Response createLunchScheduleMenu(
             @Valid CreateMenuRequestDTO createMenuRequestDTO,
             @PathParam("lunchScheduleId") Long lunchId

@@ -2,15 +2,19 @@ package mr2.meetingroom02.dojosession.lunch.dao;
 
 import mr2.meetingroom02.dojosession.base.dao.BaseDAO;
 import mr2.meetingroom02.dojosession.base.exception.NotFoundException;
+import mr2.meetingroom02.dojosession.employee.entity.Employee;
 import mr2.meetingroom02.dojosession.lunch.dto.LunchScheduleResponseDTO;
-import mr2.meetingroom02.dojosession.lunch.entity.Dish;
-import mr2.meetingroom02.dojosession.lunch.entity.LunchOrder;
-import mr2.meetingroom02.dojosession.lunch.entity.LunchSchedule;
-import mr2.meetingroom02.dojosession.lunch.entity.Menu;
+import mr2.meetingroom02.dojosession.lunch.entity.*;
+import org.hibernate.Session;
 
 import javax.ejb.Stateless;
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Root;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 import static mr2.meetingroom02.dojosession.base.exception.message.LunchScheduleExceptionMessage.LUNCH_SCHEDULE_NOT_FOUND;
@@ -72,5 +76,19 @@ public class LunchScheduleDAO extends BaseDAO<LunchSchedule> {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public List<LunchSchedule> getLunchScheduleUpcomingWeek() {
+        TypedQuery<LunchSchedule> query = entityManager.createQuery(
+                "SELECT ls FROM LunchSchedule ls " +
+                        "JOIN Menu m ON m.schedule.id = ls.id " +
+                        "JOIN MenuDish md ON md.menu.id = m.id " +
+                        "JOIN Dish d ON d.id = md.dish.id " +
+                        "WHERE ls.startDate >= TRUNC(CURRENT_DATE, 'week') + 1 " +
+                        "ORDER BY ls.startDate ASC ", LunchSchedule.class
+        );
+
+        return query.getResultList();
+
     }
 }
