@@ -154,3 +154,34 @@ JOIN lunch_schedule ls ON m.schedule_id = ls.id
 WHERE ls.start_date >= date_trunc('week', current_date) + interval '1' day
 GROUP BY dept.department_name, md.dish_id, d.dish_name, m.menu_date
 ORDER BY m.menu_date ASC, dept.department_name ASC, d.dish_name ASC;
+
+alter table employee add column role varchar(10);
+
+-- Step 1: Create the ENUM type
+CREATE TYPE status_enum AS ENUM ('INACTIVE', 'ACTIVE');
+
+alter table employee drop column status;
+
+-- Step 2: Alter the status column to use the ENUM type
+ALTER TABLE employee
+ADD COLUMN status status_enum;
+
+truncate table employee cascade;
+
+INSERT INTO employee (date_of_birth, email, phone, first_name, gender, last_name, middle_name, salary, department_id, password, status, role)
+VALUES ('1990-05-15', 'employee1@example.com', '123456789', 'John', 'MALE', 'Doe', NULL, 50000, 1, 'password1', 'ACTIVE', 'ROLE_USER');
+INSERT INTO employee (date_of_birth, email, phone, first_name, gender, last_name, middle_name, salary, department_id, password, status, role)
+VALUES ('1985-08-20', 'employee2@example.com', '987654321', 'Jane', 'FEMALE', 'Smith', NULL, 60000, 2, 'password2', 'ACTIVE', 'ROLE_USER');
+INSERT INTO employee (date_of_birth, email, phone, first_name, gender, last_name, middle_name, salary, department_id, password, status, role)
+VALUES ('1978-03-10', 'employee3@example.com', '456789123', 'Michael', 'MALE', 'Johnson', 'Anthony', 70000, 1, 'password3', 'INACTIVE', 'ROLE_USER');
+INSERT INTO employee (date_of_birth, email, phone, first_name, gender, last_name, middle_name, salary, department_id, password, status, role)
+VALUES ('1995-11-25', 'employee4@example.com', '654123789', 'Emily', 'FEMALE', 'Brown', NULL, 55000, 3, 'password4', 'ACTIVE', 'ROLE_ADMIN');
+INSERT INTO employee (date_of_birth, email, phone, first_name, gender, last_name, middle_name, salary, department_id, password, status, role)
+VALUES ('1982-07-02', 'employee5@example.com', '789321654', 'David', 'MALE', 'Williams', 'Robert', 65000, 2, 'password5', 'ACTIVE', 'ROLE_USER');
+
+select d.dish_name, m.menu_date, ls from lunch_schedule ls
+join menu m on m.schedule_id = ls.id
+join menu_dish md on md.menu_id = m.id
+join dish d on d.id = md.dish_id
+WHERE start_date >= date_trunc('week', current_date) + interval '1' day
+ORDER BY start_date asc;

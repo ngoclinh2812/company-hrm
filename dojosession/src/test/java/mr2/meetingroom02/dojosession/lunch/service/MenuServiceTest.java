@@ -11,6 +11,9 @@ public class MenuServiceTest {
     void createMenu_LunchScheduleIdNotFound_ThrowBadRequest(){}
 
     @Test
+    void createMenu_NullLunchScheduleId_ThrowBadRequest(){}
+
+    @Test
     void createMenu_NullMenuDate_ThrowBadRequest() {}
 
     @Test
