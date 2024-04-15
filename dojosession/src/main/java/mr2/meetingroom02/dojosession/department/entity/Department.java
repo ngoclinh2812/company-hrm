@@ -20,6 +20,4 @@ public class Department extends BaseEntity {
 
     private String departmentName;
 
-    private LocalDate startDate;
-
 }

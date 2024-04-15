@@ -16,6 +16,7 @@ import javax.persistence.criteria.Root;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static mr2.meetingroom02.dojosession.base.exception.message.LunchScheduleExceptionMessage.LUNCH_SCHEDULE_NOT_FOUND;
 
@@ -29,15 +30,10 @@ public class LunchScheduleDAO extends BaseDAO<LunchSchedule> {
         super(LunchSchedule.class);
     }
 
-    public LunchSchedule getScheduleLunch(Long scheduleId) throws NotFoundException {
-        try {
+    public LunchSchedule getScheduleLunch(Long scheduleId)  {
             TypedQuery<LunchSchedule> query = entityManager.createQuery("SELECT ls FROM LunchSchedule ls WHERE ls.id = :id", LunchSchedule.class)
                     .setParameter("id", scheduleId);
-            LunchSchedule lunchSchedule = query.getSingleResult();
-            return lunchSchedule;
-        } catch (NoResultException e) {
-            throw new NotFoundException(LUNCH_SCHEDULE_NOT_FOUND);
-        }
+        return query.getSingleResult();
     }
 
     public LunchScheduleResponseDTO getScheduleLunchWithDTO(Long scheduleId) throws NoResultException {

@@ -13,11 +13,13 @@ import mr2.meetingroom02.dojosession.lunch.dto.response.DishResponseDto;
 import mr2.meetingroom02.dojosession.lunch.dto.response.MenuDishResponseDTO;
 import mr2.meetingroom02.dojosession.lunch.entity.*;
 
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Stateless
 public class LunchOrderService {
 
     @Inject

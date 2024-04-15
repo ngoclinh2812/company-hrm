@@ -36,7 +36,7 @@ public class LunchScheduleExceptionMessage {
         return String.format("Menu on day " + date.toString() + " already exists.");
     }
 
-    public static String mealAlreadyExistedInTheMenu(String dishName) {
+    public static String mealAlreadySelectedWithinThisMonth(String dishName) {
         return String.format("Dish " + dishName + " has already been selected within this month");
     }
 }

@@ -12,14 +12,6 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@NamedNativeQuery(
-        name = "mealsWithinTheCurrentMonth",
-        query = "SELECT meal.* " +
-                "FROM Dish dish " +
-                "JOIN Menu menu ON meal.menu_id = menu.id " +
-                "WHERE date_trunc('month', menu.date) = date_trunc('month', current_date)",
-        resultClass = Dish.class
-)
 public class Dish extends BaseEntity {
 
     @Column(name = "dish_name")

@@ -4,18 +4,11 @@ import mr2.meetingroom02.dojosession.base.exception.BadRequestException;
 import mr2.meetingroom02.dojosession.base.exception.DuplicateException;
 import mr2.meetingroom02.dojosession.base.exception.NotFoundException;
 import mr2.meetingroom02.dojosession.base.exception.message.LunchScheduleExceptionMessage;
-import mr2.meetingroom02.dojosession.lunch.dao.DishDAO;
-import mr2.meetingroom02.dojosession.lunch.dao.LunchScheduleDAO;
-import mr2.meetingroom02.dojosession.lunch.dao.MenuDAO;
-import mr2.meetingroom02.dojosession.lunch.dao.MenuDishDao;
+import mr2.meetingroom02.dojosession.lunch.dao.*;
 import mr2.meetingroom02.dojosession.lunch.dto.CreateMenuRequestDTO;
 import mr2.meetingroom02.dojosession.lunch.dto.response.DishResponseDto;
 import mr2.meetingroom02.dojosession.lunch.dto.response.MenuResponseDTO;
-import mr2.meetingroom02.dojosession.lunch.entity.Dish;
-import mr2.meetingroom02.dojosession.lunch.entity.LunchSchedule;
-import mr2.meetingroom02.dojosession.lunch.entity.Menu;
-import mr2.meetingroom02.dojosession.lunch.entity.MenuDish;
-import mr2.meetingroom02.dojosession.lunch.mapper.MenuMapper;
+import mr2.meetingroom02.dojosession.lunch.entity.*;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -25,8 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 import static mr2.meetingroom02.dojosession.base.exception.message.DishExceptionMessage.DISH_NOT_FOUND;
-import static mr2.meetingroom02.dojosession.base.exception.message.LunchScheduleExceptionMessage.lunchIsNotServedInWeekend;
-import static mr2.meetingroom02.dojosession.base.exception.message.LunchScheduleExceptionMessage.menuDateOutOfLunchSchedulePeriod;
+import static mr2.meetingroom02.dojosession.base.exception.message.LunchScheduleExceptionMessage.*;
 
 @Stateless
 public class MenuService {
@@ -43,29 +35,37 @@ public class MenuService {
     @Inject
     private LunchScheduleDAO lunchScheduleDAO;
 
+    @Inject
+    private ProteinDAO proteinDAO;
+
     public MenuResponseDTO createMenu(CreateMenuRequestDTO createMenuRequestDTO, Long lunchId) throws NotFoundException, DuplicateException, BadRequestException {
 
         LunchSchedule lunchSchedule = lunchScheduleDAO.getScheduleLunch(lunchId);
+
         Set<Long> dishIds = createMenuRequestDTO.getDishIds();
         List<Dish> dishes = dishDao.getDishesByIds(dishIds);
         if (dishes.size() != dishIds.size()) {
             throw new NotFoundException(DISH_NOT_FOUND);
         }
 
-        dishes.stream()
-                .map(ele -> {
-                    try {
-                        checkDuplicatedMealWithinThisMonth(ele);
-                    } catch (DuplicateException e) {
-                        throw new RuntimeException(e);
-                    }
-                    return null;
-                });
+        dishes.forEach(ele -> {
+            try {
+                checkDuplicatedMealWithinThisMonth(ele);
+            } catch (DuplicateException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
-        List<MenuDish> menuDishes = dishes
-                .stream()
-                .map(ele -> MenuDish.builder().dish(ele).build())
-                .toList();
+        List<MenuDish> menuDishes = dishes.stream()
+            .map(ele -> {
+                try {
+                    checkDuplicatedProteinTypeWithinNumberOfDays(ele, 3);
+                } catch (BadRequestException e) {
+                    throw new RuntimeException(e);
+                }
+                return MenuDish.builder().dish(ele).build();
+            })
+            .toList();
 
         Menu menu = Menu.builder()
                 .lunchSchedule(lunchSchedule)
@@ -93,10 +93,18 @@ public class MenuService {
 
     }
 
+    //TODO: validate protein type within
+    private void checkDuplicatedProteinTypeWithinNumberOfDays(Dish ele, int days) throws BadRequestException {
+        List<Protein> proteins = proteinDAO.getProteinsFromPreviousDays(days);
+        if (proteins.contains(ele.getProtein())) {
+            throw new BadRequestException("Main protein types should not be duplicated within 2 days");
+        }
+    }
+
     private void checkDuplicatedMealWithinThisMonth(Dish mealInput) throws DuplicateException {
         List<Dish> selectedMealsThisMonth = dishDao.getAllMealsSelectedWithinThisMonth();
         if (selectedMealsThisMonth.contains(mealInput)) {
-            throw new DuplicateException(LunchScheduleExceptionMessage.mealAlreadyExistedInTheMenu(mealInput.getName()));
+            throw new DuplicateException(LunchScheduleExceptionMessage.mealAlreadySelectedWithinThisMonth(mealInput.getName()));
         }
     }
 
