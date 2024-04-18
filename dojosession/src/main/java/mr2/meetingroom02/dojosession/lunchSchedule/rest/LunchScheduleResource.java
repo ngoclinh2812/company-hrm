@@ -43,7 +43,7 @@ public class LunchScheduleResource {
     @GET
     @Path("/next-week")
     public Response getLunchScheduleUpcomingWeek() throws NotFoundException {
-        List<LunchScheduleResponseDTO> responseDTO = lunchScheduleService.getLunchScheduleUpcomingWeek();
+        LunchScheduleResponseDTO responseDTO = lunchScheduleService.getLunchScheduleUpcomingWeek();
         return Response.ok().entity(responseDTO).build();
     }
 
@@ -58,11 +58,10 @@ public class LunchScheduleResource {
     @POST
     @Path("/{lunchScheduleId}/menu")
     @RolesAllowed({"ROLE_ADMIN"})
-    //TODO: handle the dish / protein duplication
     public Response createLunchScheduleMenu(
             @Valid CreateMenuRequestDTO createMenuRequestDTO,
             @PathParam("lunchScheduleId") Long lunchId
-            ) throws DuplicateException, BadRequestException, NotFoundException {
+    ) throws DuplicateException, BadRequestException, NotFoundException {
         MenuResponseDTO responseDTO = menuService.createMenu(createMenuRequestDTO, lunchId);
         return Response.created(URI.create("lunch/" + responseDTO.getId())).entity(responseDTO).build();
     }

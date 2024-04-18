@@ -68,17 +68,15 @@ public class LunchScheduleDAO extends BaseDAO<LunchSchedule> {
         }
     }
 
-    public List<LunchSchedule> getLunchScheduleUpcomingWeek() {
+    public LunchSchedule getLunchScheduleUpcomingWeek() {
         TypedQuery<LunchSchedule> query = entityManager.createQuery(
-                "SELECT ls FROM LunchSchedule ls " +
-                        "JOIN Menu m ON m.schedule.id = ls.id " +
-                        "JOIN MenuDish md ON md.menu.id = m.id " +
-                        "JOIN Dish d ON d.id = md.dish.id " +
-                        "WHERE ls.startDate >= TRUNC(CURRENT_DATE, 'week') + 1 " +
-                        "ORDER BY ls.startDate ASC ", LunchSchedule.class
-        );
+                        "SELECT ls FROM LunchSchedule ls " +
+                                "WHERE ls.startDate >= :currentDate " +
+                                "ORDER BY ls.startDate ASC", LunchSchedule.class)
+                .setParameter("currentDate", LocalDate.now())
+                .setMaxResults(1);
 
-        return query.getResultList();
+        return query.getSingleResult();
 
     }
 }

@@ -79,13 +79,14 @@ public class LunchScheduleService {
     }
 
     public byte[] exportExcelMealsInUpcomingWeek() throws IOException {
+        LunchScheduleResponseDTO lunchScheduleResponseDTO = getLunchScheduleUpcomingWeek();
         List<UpcomingWeekOrderDishesByDepartmentDTO> upcomingWeekOrderDishesByDepartmentDTOS = lunchOrderDAO.getNextWeekOrderList();
-        byte[] file = excelExporter.exportToExcel(upcomingWeekOrderDishesByDepartmentDTOS);
+        byte[] file = excelExporter.exportToExcel(upcomingWeekOrderDishesByDepartmentDTOS, lunchScheduleResponseDTO);
         return file;
     }
 
-    public List<LunchScheduleResponseDTO> getLunchScheduleUpcomingWeek() {
-        List<LunchSchedule> lunchSchedules = lunchScheduleDAO.getLunchScheduleUpcomingWeek();
+    public LunchScheduleResponseDTO getLunchScheduleUpcomingWeek() {
+        LunchSchedule lunchSchedules = lunchScheduleDAO.getLunchScheduleUpcomingWeek();
         return lunchScheduleMapper.toLunchScheduleDTO(lunchSchedules);
     }
 }
