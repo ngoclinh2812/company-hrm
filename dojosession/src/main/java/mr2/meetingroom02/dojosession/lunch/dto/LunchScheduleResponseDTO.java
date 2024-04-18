@@ -31,4 +31,6 @@ public class LunchScheduleResponseDTO implements Serializable {
 
     List<MenuDTO> menuList;
 
+    @JsonbDateFormat("yyyy-MM-dd")
+    private LocalDate orderDeadline;
 }

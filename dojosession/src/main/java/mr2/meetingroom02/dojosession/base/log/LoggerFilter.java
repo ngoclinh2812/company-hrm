@@ -1,19 +1,15 @@
-package mr2.meetingroom02.dojosession.base.filter;
+package mr2.meetingroom02.dojosession.base.log;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Priority;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
-import javax.ws.rs.container.ContainerResponseContext;
-import javax.ws.rs.container.ContainerResponseFilter;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
-import java.net.URI;
 
 @Provider
 @Priority(1)

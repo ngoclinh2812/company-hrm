@@ -21,7 +21,6 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("employees")
-//TODO: 401, 500, 403, 404 - create and test exceptions one by one, entity Not Found, bad request, internal server error
 public class EmployeeResource {
 
     @Inject

@@ -5,7 +5,10 @@ import mr2.meetingroom02.dojosession.lunch.entity.Dish;
 
 import javax.ejb.Stateless;
 import javax.persistence.NoResultException;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -34,14 +37,15 @@ public class DishDAO extends BaseDAO<Dish> {
         return meals;
     }
 
-    public List<Dish> getAllMealsSelectedWithinThisMonth() {
+    public List<Dish> getAllMealsSelectedWithinThisMonth(LocalDate menuDate) {
         try {
-            TypedQuery<Dish> query = entityManager.createNamedQuery("mealsWithinTheCurrentMonth", Dish.class);
+            LocalDateTime startOfMonth = menuDate.atStartOfDay();
+            Query query = entityManager.createNamedQuery("mealsWithinTheCurrentMonth", Dish.class)
+                    .setParameter("startOfMonth", startOfMonth);
             return query.getResultList();
         } catch (NoResultException e) {
             return null;
         }
     }
-
 
 }

@@ -6,7 +6,7 @@ import mr2.meetingroom02.dojosession.employee.dao.EmployeeDAO;
 import mr2.meetingroom02.dojosession.employee.entity.Employee;
 import mr2.meetingroom02.dojosession.lunch.dao.LunchOrderDAO;
 import mr2.meetingroom02.dojosession.lunch.dao.LunchScheduleDAO;
-import mr2.meetingroom02.dojosession.lunch.dao.MenuDishDao;
+import mr2.meetingroom02.dojosession.lunch.dao.MenuDishDAO;
 import mr2.meetingroom02.dojosession.lunch.dto.CreateLunchOrderRequestDTO;
 import mr2.meetingroom02.dojosession.lunch.dto.LunchOrderResponseDTO;
 import mr2.meetingroom02.dojosession.lunch.dto.response.DishResponseDto;
@@ -29,7 +29,7 @@ public class LunchOrderService {
     private EmployeeDAO employeeDAO;
 
     @Inject
-    private MenuDishDao menuDishDao;
+    private MenuDishDAO menuDishDao;
 
     @Inject
     private LunchScheduleDAO lunchScheduleDAO;

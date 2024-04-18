@@ -12,6 +12,15 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@NamedNativeQuery(
+        name = "mealsWithinTheCurrentMonth",
+        query = "SELECT * FROM dish d " +
+                "JOIN menu_dish md ON d.id = md.dish_id " +
+                "JOIN menu m ON m.id = md.menu_id " +
+                "WHERE date_trunc('month', m.menu_date) = date_trunc('month', CAST(:startOfMonth AS TIMESTAMP)) " +
+                "ORDER BY m.menu_date ASC",
+        resultClass = Dish.class
+)
 public class Dish extends BaseEntity {
 
     @Column(name = "dish_name")

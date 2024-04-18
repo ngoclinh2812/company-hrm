@@ -6,8 +6,8 @@ import mr2.meetingroom02.dojosession.lunch.entity.MenuDish;
 import javax.ejb.Stateless;
 
 @Stateless
-public class MenuDishDao extends BaseDAO<MenuDish> {
-    public MenuDishDao() {
+public class MenuDishDAO extends BaseDAO<MenuDish> {
+    public MenuDishDAO() {
         super(MenuDish.class);
     }
 }

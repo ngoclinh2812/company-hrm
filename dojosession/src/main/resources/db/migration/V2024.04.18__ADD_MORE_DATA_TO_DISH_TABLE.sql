@@ -1,0 +1,22 @@
+INSERT INTO dish (dish_name, is_vegan, calories, protein_id)
+VALUES ('Bánh Xèo Tôm (Crispy Shrimp Pancake)', FALSE, 500, 5),
+       ('Bún Thịt Nướng (Vermicelli with Grilled Pork)', FALSE, 550, 3),
+       ('Nem Nướng (Grilled Pork Skewers)', FALSE, 400, 3),
+       ('Bún Cá (Vermicelli with Fish)', FALSE, 480, 4),
+       ('Cá Kho Tộ (Braised Fish in Clay Pot)', FALSE, 420, 4),
+       ('Gỏi Cá (Fish Salad)', FALSE, 300, 4),
+       ('Com Tam (Broken Rice)', FALSE, 500, 7),
+       ('Hủ Tiếu Nam Vang (Pork Noodle Soup)', FALSE, 580, 3),
+       ('Bún Ốc (Vermicelli with Snails)', FALSE, 400, 4),
+       ('Banh Canh Gio Heo (Rice Cake Noodle Soup with Pig Trotters)', FALSE, 550, 1),
+
+       ('Banh Canh Cua (Rice Cake Noodle Soup with Crab)', FALSE, 520, 6),
+       ('Miến Gà (Glass Noodle Soup with Chicken)', FALSE, 480, 1),
+       ('Xôi Xèo (Sweet Sticky Rice with Mung Bean and Shredded Coconut)', TRUE, 350, 1),
+       ('Chè (Sweet Soup with Various Ingredients)', TRUE, 300, 1),
+       ('Bánh Flan (Vietnamese Flan)', TRUE, 250, 10),
+       ('Chè Bà Trưng (Green Bean and Mung Bean Sweet Soup)', TRUE, 280, 4),
+       ('Chè Thái (Thai Tea Sweet Soup)', TRUE, 320, 1),
+       ('Bánh Bèo (Mini Steamed Rice Cakes)', TRUE, 200, 1),
+       ('Bánh Khọt (Mini Savory Rice Pancakes)', TRUE, 300, 2),
+       ('Cao Lầu (Hoi An Noodles)', FALSE, 550, 3);

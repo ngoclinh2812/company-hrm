@@ -33,7 +33,11 @@ public class LunchScheduleDAO extends BaseDAO<LunchSchedule> {
     public LunchSchedule getScheduleLunch(Long scheduleId)  {
             TypedQuery<LunchSchedule> query = entityManager.createQuery("SELECT ls FROM LunchSchedule ls WHERE ls.id = :id", LunchSchedule.class)
                     .setParameter("id", scheduleId);
-        return query.getSingleResult();
+        try {
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     public LunchScheduleResponseDTO getScheduleLunchWithDTO(Long scheduleId) throws NoResultException {

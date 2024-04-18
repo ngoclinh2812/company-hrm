@@ -30,7 +30,7 @@ public class MenuService {
     private MenuDAO menuDAO;
 
     @Inject
-    private MenuDishDao menuDishDao;
+    private MenuDishDAO menuDishDao;
 
     @Inject
     private LunchScheduleDAO lunchScheduleDAO;
@@ -42,30 +42,26 @@ public class MenuService {
 
         LunchSchedule lunchSchedule = lunchScheduleDAO.getScheduleLunch(lunchId);
 
+        checkValidLunchSchedule(lunchSchedule);
+
         Set<Long> dishIds = createMenuRequestDTO.getDishIds();
-        List<Dish> dishes = dishDao.getDishesByIds(dishIds);
-        if (dishes.size() != dishIds.size()) {
-            throw new NotFoundException(DISH_NOT_FOUND);
+
+        if (dishIds.size() >= 10) {
+            throw new BadRequestException(ONE_MENU_CAN_NOT_CONTAINS_OVER_20_DISHES);
         }
 
-        dishes.forEach(ele -> {
-            try {
-                checkDuplicatedMealWithinThisMonth(ele);
-            } catch (DuplicateException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        List<Dish> dishes = dishDao.getDishesByIds(dishIds);
+        checkValidDishes(dishes, dishIds);
+
+        for (Dish dish : dishes) {
+            checkDuplicatedMealWithinThisMonth(dish, createMenuRequestDTO.getMenuDate());
+        }
 
         List<MenuDish> menuDishes = dishes.stream()
-            .map(ele -> {
-                try {
-                    checkDuplicatedProteinTypeWithinNumberOfDays(ele, 3);
-                } catch (BadRequestException e) {
-                    throw new RuntimeException(e);
-                }
-                return MenuDish.builder().dish(ele).build();
-            })
-            .toList();
+                .map(ele ->
+                        MenuDish.builder().dish(ele).build()
+                )
+                .toList();
 
         Menu menu = Menu.builder()
                 .lunchSchedule(lunchSchedule)
@@ -93,18 +89,37 @@ public class MenuService {
 
     }
 
+    private void checkValidDishes(List<Dish> dishes, Set<Long> dishIds) throws NotFoundException, BadRequestException {
+        if (dishes.size() != dishIds.size()) {
+            throw new NotFoundException(DISH_NOT_FOUND);
+        }
+
+        for (Dish ele : dishes) {
+            checkDuplicatedProteinTypeWithinNumberOfDays(ele, 3);
+        }
+
+
+    }
+
+    private void checkValidLunchSchedule(LunchSchedule lunchSchedule) throws BadRequestException {
+
+        if (lunchSchedule == null) throw new BadRequestException(LUNCH_SCHEDULE_NOT_FOUND);
+
+
+    }
+
     //TODO: validate protein type within
     private void checkDuplicatedProteinTypeWithinNumberOfDays(Dish ele, int days) throws BadRequestException {
         List<Protein> proteins = proteinDAO.getProteinsFromPreviousDays(days);
         if (proteins.contains(ele.getProtein())) {
-            throw new BadRequestException("Main protein types should not be duplicated within 2 days");
+            throw new BadRequestException("Main protein types should not be duplicated within 2 days in the lunch schedules");
         }
     }
 
-    private void checkDuplicatedMealWithinThisMonth(Dish mealInput) throws DuplicateException {
-        List<Dish> selectedMealsThisMonth = dishDao.getAllMealsSelectedWithinThisMonth();
+    private void checkDuplicatedMealWithinThisMonth(Dish mealInput, LocalDate menuDate) throws DuplicateException, BadRequestException {
+        List<Dish> selectedMealsThisMonth = dishDao.getAllMealsSelectedWithinThisMonth(menuDate);
         if (selectedMealsThisMonth.contains(mealInput)) {
-            throw new DuplicateException(LunchScheduleExceptionMessage.mealAlreadySelectedWithinThisMonth(mealInput.getName()));
+            throw new BadRequestException(LunchScheduleExceptionMessage.mealAlreadySelectedWithinThisMonth(mealInput.getName()));
         }
     }
 

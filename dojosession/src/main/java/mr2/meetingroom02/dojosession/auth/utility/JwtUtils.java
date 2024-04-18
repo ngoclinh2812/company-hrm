@@ -10,8 +10,9 @@ import mr2.meetingroom02.dojosession.auth.model.JwtRequest;
 import mr2.meetingroom02.dojosession.auth.model.JwtResponse;
 import mr2.meetingroom02.dojosession.auth.service.AuthService;
 import mr2.meetingroom02.dojosession.base.authentication.AuthenticationConfiguration;
-import mr2.meetingroom02.dojosession.base.exception.BadRequestException;
 import mr2.meetingroom02.dojosession.base.exception.InputValidationException;
+import mr2.meetingroom02.dojosession.base.exception.AuthorizedException;
+import mr2.meetingroom02.dojosession.base.exception.message.EmployeeErrorMessage;
 import mr2.meetingroom02.dojosession.employee.entity.Employee;
 import mr2.meetingroom02.dojosession.employee.entity.RoleEnum;
 import mr2.meetingroom02.dojosession.employee.entity.StatusEnum;
@@ -49,7 +50,7 @@ public class JwtUtils {
                     .buildValidatorFactory()
                     .getValidator();
 
-    public JwtResponse generateJwtResponse(@Valid JwtRequest jwtRequest) throws AuthorizationException, InputValidationException {
+    public JwtResponse generateJwtResponse(@Valid JwtRequest jwtRequest) throws AuthorizationException, InputValidationException, AuthorizedException {
         verifyJwtRequest(jwtRequest);
         String email = jwtRequest.getEmail().trim();
         String token = generateToken(jwtRequest);
@@ -60,7 +61,7 @@ public class JwtUtils {
         return new JwtResponse(token, email, roleEnum, status);
     }
 
-    public String generateToken(JwtRequest jwtRequest) throws AuthorizationException, InputValidationException {
+    public String generateToken(JwtRequest jwtRequest) throws AuthorizationException, InputValidationException, AuthorizedException {
         if (!authService.checkAuthentication(jwtRequest)) {
             throw new InputValidationException("Email or password is invalid");
         }
@@ -81,7 +82,7 @@ public class JwtUtils {
                     .withExpiresAt(new Date(System.currentTimeMillis() + liveTime))
                     .sign(algorithm);
         } catch (JWTCreationException | IllegalArgumentException e) {
-            throw new AuthorizationException("Unauthorized Employee");
+            throw new AuthorizedException(EmployeeErrorMessage.UNAUTHORIZED_USER);
         }
         return token;
     }

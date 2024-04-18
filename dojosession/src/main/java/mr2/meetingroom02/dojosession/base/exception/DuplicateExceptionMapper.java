@@ -19,8 +19,8 @@ public class DuplicateExceptionMapper implements ExceptionMapper<DuplicateExcept
         logger.error(LoggingExceptionMessage.getMessage(e));
 
         ExceptionBody body = new ExceptionBody(
-                Response.Status.CONFLICT.getStatusCode(),
-                Response.Status.CONFLICT.getReasonPhrase(),
+                Response.Status.BAD_REQUEST.getStatusCode(),
+                Response.Status.BAD_REQUEST.getReasonPhrase(),
                 e.getMessage()
         );
 
