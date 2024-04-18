@@ -56,38 +56,6 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
         request.setSecurityContext(sc);
 
-//        String authHeader = request.getHeaderString("Authorization");
-//
-//        if (isNotValidJwt(authHeader)) {
-//            SecurityContext sc = new RequestSecurityContext(new EmployeePrincipal());
-//            request.setSecurityContext(sc);
-//            return;
-//        }
-//
-//        RoleEnum role = jwtUtils.getRoleFromToken(authHeader);
-//
-//        String path = request.getUriInfo().getPath();
-//
-//        String[] allowedRoles = API_ROLES_CONFIG.get(path);
-//
-//        if (allowedRoles != null && !Arrays.asList(allowedRoles).contains(role.toString())) {
-//            throw new AuthorizedException(EmployeeErrorMessage.UNAUTHORIZED_USER);
-//        }
-//
-//        String email = null;
-//
-//        try {
-//            email = jwtUtils.getEmailFromToken(authHeader);
-//        } catch (AuthorizationException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        SecurityContext sc = new RequestSecurityContext(new EmployeePrincipal(email, role));
-//
-//        String[] localPart = email.split("@");
-//        ThreadContext.put("mail", localPart[0] + ":" + UUID.randomUUID().toString().replace("-", "").substring(0, 8));
-//
-//        request.setSecurityContext(sc);
     }
 
     private boolean isNotValidJwt(String header) {

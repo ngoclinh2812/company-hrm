@@ -1,8 +1,7 @@
 package mr2.meetingroom02.dojosession.utils.excel;
 
-import mr2.meetingroom02.dojosession.lunch.dto.UpcomingWeekMealsDTO;
+import mr2.meetingroom02.dojosession.lunchSchedule.dto.UpcomingWeekOrderDishesByDepartmentDTO;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javax.ejb.Singleton;
@@ -15,7 +14,7 @@ import java.util.List;
 @Singleton
 public class ExcelExporter {
 
-    public byte[] exportToExcel(List<UpcomingWeekMealsDTO> dataList) throws IOException {
+    public byte[] exportToExcel(List<UpcomingWeekOrderDishesByDepartmentDTO> dataList) throws IOException {
 
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Upcoming Week Meals");
@@ -30,7 +29,7 @@ public class ExcelExporter {
 
             int startRow = 1;
             int rowNum = 1;
-            for (UpcomingWeekMealsDTO dto : dataList) {
+            for (UpcomingWeekOrderDishesByDepartmentDTO dto : dataList) {
                 Row row = sheet.createRow(rowNum++);
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
                 String formattedDate = dto.getMenuDate().format(formatter);
