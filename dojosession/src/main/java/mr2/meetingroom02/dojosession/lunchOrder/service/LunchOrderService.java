@@ -8,15 +8,20 @@ import mr2.meetingroom02.dojosession.lunchOrder.dao.LunchOrderDAO;
 import mr2.meetingroom02.dojosession.lunchOrder.dto.LunchOrderResponseDTO;
 import mr2.meetingroom02.dojosession.lunchOrder.entity.LunchOrder;
 import mr2.meetingroom02.dojosession.lunchSchedule.dao.LunchScheduleDAO;
+import mr2.meetingroom02.dojosession.lunchSchedule.dto.LunchScheduleResponseDTO;
+import mr2.meetingroom02.dojosession.lunchSchedule.dto.UpcomingWeekOrderDishesByDepartmentDTO;
+import mr2.meetingroom02.dojosession.lunchSchedule.service.LunchScheduleService;
 import mr2.meetingroom02.dojosession.menuDish.entity.MenuDish;
 import mr2.meetingroom02.dojosession.menuDish.dao.MenuDishDAO;
 import mr2.meetingroom02.dojosession.lunchSchedule.dto.CreateLunchOrderRequestDTO;
 import mr2.meetingroom02.dojosession.dish.dto.DishResponseDTO;
 import mr2.meetingroom02.dojosession.menuDish.dto.MenuDishResponseDTO;
 import mr2.meetingroom02.dojosession.lunchSchedule.entity.*;
+import mr2.meetingroom02.dojosession.utils.excel.ExcelExporter;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +40,23 @@ public class LunchOrderService {
 
     @Inject
     private LunchScheduleDAO lunchScheduleDAO;
+
+    @Inject
+    private LunchScheduleService lunchScheduleService;
+
+    @Inject
+    private ExcelExporter excelExporter;
+
+    public List<UpcomingWeekOrderDishesByDepartmentDTO> getMealsOfEachDepartmentInUpcomingWeek() {
+        return lunchOrderDAO.getNextWeekOrderList();
+    }
+
+    public byte[] exportExcelMealsInUpcomingWeek() throws IOException {
+        LunchScheduleResponseDTO lunchScheduleResponseDTO = lunchScheduleService.getLunchScheduleUpcomingWeek();
+        List<UpcomingWeekOrderDishesByDepartmentDTO> upcomingWeekOrderDishesByDepartmentDTOS = lunchOrderDAO.getNextWeekOrderList();
+        byte[] file = excelExporter.exportToExcel(upcomingWeekOrderDishesByDepartmentDTOS, lunchScheduleResponseDTO);
+        return file;
+    }
 
     public LunchOrderResponseDTO createLunchOrder(CreateLunchOrderRequestDTO createLunchOrderRequestDTO, String employeeEmail) throws NotFoundException, BadRequestException {
 

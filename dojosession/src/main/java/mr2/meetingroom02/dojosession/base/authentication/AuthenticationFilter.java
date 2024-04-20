@@ -41,34 +41,52 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     public void filter(ContainerRequestContext request) {
 
         String authHeader = request.getHeaderString("Authorization");
-        if (isNotValidJwt(authHeader)) {
-            SecurityContext sc = new RequestSecurityContext(new EmployeePrincipal());
-            request.setSecurityContext(sc);
+        String path = request.getUriInfo().getPath();
+        if(path.contains("/auth/login")){
             return;
         }
 
+        if (isNotValidJwt(authHeader)) {
+            throw new AuthorizedException("invalid header");
+        }
+
         RoleEnum role = jwtUtils.getRoleFromToken(authHeader);
-        String email = jwtUtils.getEmailFromToken(authHeader);
-        SecurityContext sc = new RequestSecurityContext(new EmployeePrincipal(email, role));
+            String email = jwtUtils.getEmailFromToken(authHeader);
 
-        String[] localPart = email.split("@");
-        ThreadContext.put("mail", localPart[0] + ":" + UUID.randomUUID().toString().replace("-", "").substring(0, 8));
-
-        request.setSecurityContext(sc);
+        if(checkRole(role, path)){
+            SecurityContext sc = new RequestSecurityContext(new EmployeePrincipal(email, role));
+            request.setSecurityContext(sc);
+            return;
+        } else {
+            throw new AuthorizedException("Forbidden");
+        }
 
     }
 
-    private boolean isNotValidJwt(String header) {
-        if (header == null) {
-                return true;
-        }
-
-        try {
-            jwtUtils.validateJwtToken(header);
-        } catch (AuthorizationException e) {
+    private boolean checkRole(RoleEnum role, String path) {
+        if(role == RoleEnum.ROLE_ADMIN){
+            if(!path.contains("back-office")) {
+                return false;
+            };
             return true;
+        } else{
+            if(!path.contains("back-office")) {
+                return true;
+            };
+            return false;
         }
+    }
 
-        return !header.startsWith("Bearer ");
+    private boolean isNotValidJwt(String header) {
+        if (header == null || !header.startsWith("Bearer ")) {
+                return true;
+        } else{
+            try {
+                jwtUtils.validateJwtToken(header);
+                return false;
+            } catch (AuthorizationException e) {
+                return true;
+            }
+        }
     }
 }

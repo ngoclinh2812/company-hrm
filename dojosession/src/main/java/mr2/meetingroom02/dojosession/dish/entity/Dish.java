@@ -22,6 +22,7 @@ import java.util.Set;
                 "ORDER BY m.menu_date ASC",
         resultClass = Dish.class
 )
+@Builder
 public class Dish extends BaseEntity {
 
     @Column(name = "dish_name")

@@ -22,6 +22,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -54,22 +55,32 @@ public class MenuService {
 
         Set<Long> dishIds = createMenuRequestDTO.getDishIds();
 
-        if (dishIds.size() >= 10) {
-            throw new BadRequestException(ONE_MENU_CAN_NOT_CONTAINS_OVER_20_DISHES);
+        checkValidDishIds(dishIds);
+
+        List<MenuDish> menuDishes = new ArrayList<>();
+        List<DishResponseDTO> dishResponseDTOS = new ArrayList<>();
+
+        if (!dishIds.isEmpty()) {
+            List<Dish> dishes = dishDao.getDishesByIds(dishIds);
+            checkValidDishes(dishes, dishIds);
+
+            for (Dish dish : dishes) {
+                checkDuplicatedMealWithinThisMonth(dish, createMenuRequestDTO.getMenuDate());
+            }
+
+            menuDishes = dishes.stream()
+                    .map(ele ->
+                            MenuDish.builder().dish(ele).build()
+                    )
+                    .toList();
+
+            dishResponseDTOS = dishes
+                    .stream()
+                    .map(ele -> DishResponseDTO.builder().name(ele.getName()).build())
+                    .toList();
+        } else {
+            menuDishes = List.of();
         }
-
-        List<Dish> dishes = dishDao.getDishesByIds(dishIds);
-        checkValidDishes(dishes, dishIds);
-
-        for (Dish dish : dishes) {
-            checkDuplicatedMealWithinThisMonth(dish, createMenuRequestDTO.getMenuDate());
-        }
-
-        List<MenuDish> menuDishes = dishes.stream()
-                .map(ele ->
-                        MenuDish.builder().dish(ele).build()
-                )
-                .toList();
 
         Menu menu = Menu.builder()
                 .lunchSchedule(lunchSchedule)
@@ -84,17 +95,22 @@ public class MenuService {
             menuDishDao.insert(ele);
         });
 
-        List<DishResponseDTO> dishResponseDTOS = dishes
-                .stream()
-                .map(ele -> DishResponseDTO.builder().name(ele.getName()).build())
-                .toList();
-
         return MenuResponseDTO.builder()
                 .id(menu.getId())
                 .menuDate(menu.getMenuDate())
                 .dishResponseDTOS(dishResponseDTOS)
                 .build();
 
+    }
+
+    private void checkValidDishIds(Set<Long> dishIds) throws BadRequestException {
+        if (dishIds.size() >= 10) {
+            throw new BadRequestException(ONE_MENU_CAN_NOT_CONTAINS_OVER_20_DISHES);
+        }
+
+        if (dishIds.isEmpty()) {
+            return;
+        }
     }
 
     private void checkValidDishes(List<Dish> dishes, Set<Long> dishIds) throws NotFoundException, BadRequestException {
@@ -105,15 +121,10 @@ public class MenuService {
         for (Dish ele : dishes) {
             checkDuplicatedProteinTypeWithinNumberOfDays(ele, 3);
         }
-
-
     }
 
     private void checkValidLunchSchedule(LunchSchedule lunchSchedule) throws BadRequestException {
-
         if (lunchSchedule == null) throw new BadRequestException(LUNCH_SCHEDULE_NOT_FOUND);
-
-
     }
 
     private void checkDuplicatedProteinTypeWithinNumberOfDays(Dish ele, int days) throws BadRequestException {
@@ -148,8 +159,8 @@ public class MenuService {
         }
     }
 
-    private void checkMenuAlreadyExisted(LocalDate date) throws DuplicateException {
+    private void checkMenuAlreadyExisted(LocalDate date) throws BadRequestException {
         if (menuDAO.getMenuByDate(date) != null)
-            throw new DuplicateException(LunchScheduleExceptionMessage.menuAlreadyExisted(date));
+            throw new BadRequestException(LunchScheduleExceptionMessage.menuAlreadyExisted(date));
     }
 }

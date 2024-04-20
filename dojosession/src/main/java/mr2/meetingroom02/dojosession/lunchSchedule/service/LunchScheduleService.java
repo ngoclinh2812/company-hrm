@@ -39,10 +39,6 @@ public class LunchScheduleService {
     @Inject
     private ExcelExporter excelExporter;
 
-    public List<UpcomingWeekOrderDishesByDepartmentDTO> getMealsOfEachDepartmentInUpcomingWeek() {
-        return lunchOrderDAO.getNextWeekOrderList();
-    }
-
     @Transactional
     public LunchScheduleResponseDTO createLunchSchedule(CreateLunchScheduleDTO scheduleDTO)
             throws InternalError, MappingException, BadRequestException {
@@ -58,8 +54,6 @@ public class LunchScheduleService {
             throw new NotFoundException(LUNCH_SCHEDULE_NOT_FOUND);
         } else {
             List<Menu> menus = menuDAO.getAllByLunchScheduleId(lunchSchedule.getId());
-            if (menus != null) {
-            }
             return lunchScheduleMapper.toLunchScheduleDTO(lunchSchedule);
         }
     }
@@ -76,13 +70,6 @@ public class LunchScheduleService {
         if (!lunchSchedules.isEmpty()) {
             throw new BadRequestException(OVERLAP_LUNCH_SCHEDULE);
         }
-    }
-
-    public byte[] exportExcelMealsInUpcomingWeek() throws IOException {
-        LunchScheduleResponseDTO lunchScheduleResponseDTO = getLunchScheduleUpcomingWeek();
-        List<UpcomingWeekOrderDishesByDepartmentDTO> upcomingWeekOrderDishesByDepartmentDTOS = lunchOrderDAO.getNextWeekOrderList();
-        byte[] file = excelExporter.exportToExcel(upcomingWeekOrderDishesByDepartmentDTOS, lunchScheduleResponseDTO);
-        return file;
     }
 
     public LunchScheduleResponseDTO getLunchScheduleUpcomingWeek() {

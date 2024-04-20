@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -16,6 +17,7 @@ import java.util.Set;
 @JsonNaming(PropertyNamingStrategies.LowerCamelCaseStrategy.class)
 public class CreateMenuRequestDTO {
 
+    @NotNull(message = "Menu date must not be null")
     private LocalDate menuDate;
 
     private Set<Long> dishIds;

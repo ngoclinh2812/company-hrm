@@ -15,18 +15,18 @@ import java.time.LocalDate;
 @Setter
 @JsonNaming(PropertyNamingStrategies.LowerCamelCaseStrategy.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Builder
 public class CreateLunchScheduleDTO implements Serializable {
 
     @JsonbDateFormat("yyyy-MM-dd")
-    @NotNull
+    @NotNull(message = "Start date must not be null")
     private LocalDate startDate;
 
     @JsonbDateFormat("yyyy-MM-dd")
-    @NotNull
+    @NotNull(message = "End date must not be null")
     private LocalDate endDate;
 
     @JsonbDateFormat("yyyy-MM-dd")
-    @NotNull
     @Column(name = "order_deadline")
     private LocalDate orderDeadline;
 
