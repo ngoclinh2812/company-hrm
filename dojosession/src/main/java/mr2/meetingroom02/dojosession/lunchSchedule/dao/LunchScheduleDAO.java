@@ -3,7 +3,7 @@ package mr2.meetingroom02.dojosession.lunchSchedule.dao;
 import mr2.meetingroom02.dojosession.base.dao.BaseDAO;
 import mr2.meetingroom02.dojosession.lunchOrder.entity.LunchOrder;
 import mr2.meetingroom02.dojosession.lunchSchedule.dto.LunchScheduleResponseDTO;
-import mr2.meetingroom02.dojosession.lunchSchedule.entity.*;
+import mr2.meetingroom02.dojosession.lunchSchedule.entity.LunchSchedule;
 
 import javax.ejb.Stateless;
 import javax.persistence.*;
@@ -53,7 +53,7 @@ public class LunchScheduleDAO extends BaseDAO<LunchSchedule> {
             List<LunchSchedule> lunchSchedules = query.getResultList();
             return lunchSchedules;
         } catch (NoResultException e) {
-            return null;
+            return List.of();
         }
     }
 

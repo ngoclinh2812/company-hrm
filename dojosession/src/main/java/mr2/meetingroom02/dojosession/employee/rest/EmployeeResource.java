@@ -7,8 +7,6 @@ import mr2.meetingroom02.dojosession.employee.dto.EmployeeCreateRequestDTO;
 import mr2.meetingroom02.dojosession.employee.dto.EmployeeResponseDTO;
 import mr2.meetingroom02.dojosession.employee.dto.EmployeeUpdateRequestDTO;
 import mr2.meetingroom02.dojosession.employee.service.EmployeeService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -25,9 +23,6 @@ public class EmployeeResource {
 
     @Inject
     private EmployeeService employeeService;
-
-    //TODO: Implement loggers
-//    private static final Logger logger = LogManager.getLogger(EmployeeResource.class);
 
     @GET
     public Response getEmployeesByCategory(@QueryParam("gender") String gender,

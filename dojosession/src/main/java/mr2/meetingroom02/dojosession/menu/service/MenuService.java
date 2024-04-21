@@ -3,18 +3,17 @@ package mr2.meetingroom02.dojosession.menu.service;
 import mr2.meetingroom02.dojosession.base.exception.BadRequestException;
 import mr2.meetingroom02.dojosession.base.exception.DuplicateException;
 import mr2.meetingroom02.dojosession.base.exception.NotFoundException;
-import mr2.meetingroom02.dojosession.base.exception.message.LunchScheduleExceptionMessage;
 import mr2.meetingroom02.dojosession.dish.dao.DishDAO;
-import mr2.meetingroom02.dojosession.dish.entity.Dish;
-import mr2.meetingroom02.dojosession.lunchSchedule.dao.*;
-import mr2.meetingroom02.dojosession.lunchSchedule.dto.CreateMenuRequestDTO;
 import mr2.meetingroom02.dojosession.dish.dto.DishResponseDTO;
-import mr2.meetingroom02.dojosession.menu.dto.MenuResponseDTO;
-import mr2.meetingroom02.dojosession.lunchSchedule.entity.*;
+import mr2.meetingroom02.dojosession.dish.entity.Dish;
+import mr2.meetingroom02.dojosession.lunchSchedule.dao.LunchScheduleDAO;
+import mr2.meetingroom02.dojosession.lunchSchedule.dto.CreateMenuRequestDTO;
+import mr2.meetingroom02.dojosession.lunchSchedule.entity.LunchSchedule;
 import mr2.meetingroom02.dojosession.menu.dao.MenuDAO;
+import mr2.meetingroom02.dojosession.menu.dto.MenuResponseDTO;
 import mr2.meetingroom02.dojosession.menu.entity.Menu;
-import mr2.meetingroom02.dojosession.menuDish.entity.MenuDish;
 import mr2.meetingroom02.dojosession.menuDish.dao.MenuDishDAO;
+import mr2.meetingroom02.dojosession.menuDish.entity.MenuDish;
 import mr2.meetingroom02.dojosession.protein.Protein;
 import mr2.meetingroom02.dojosession.protein.ProteinDAO;
 
@@ -26,8 +25,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static mr2.meetingroom02.dojosession.base.exception.message.DishExceptionMessage.DISH_NOT_FOUND;
-import static mr2.meetingroom02.dojosession.base.exception.message.LunchScheduleExceptionMessage.*;
+import static mr2.meetingroom02.dojosession.dish.constants.DishExceptionMessages.DISH_NOT_FOUND;
+import static mr2.meetingroom02.dojosession.lunchOrder.constants.LunchOrderExceptionMessage.mealAlreadySelectedWithinThisMonth;
+import static mr2.meetingroom02.dojosession.lunchSchedule.constants.LunchScheduleExceptionMessage.*;
+import static mr2.meetingroom02.dojosession.menu.constants.MenuExceptionMessage.*;
 
 @Stateless
 public class MenuService {
@@ -57,7 +58,7 @@ public class MenuService {
 
         checkValidDishIds(dishIds);
 
-        List<MenuDish> menuDishes = new ArrayList<>();
+        List<MenuDish> menuDishes;
         List<DishResponseDTO> dishResponseDTOS = new ArrayList<>();
 
         if (!dishIds.isEmpty()) {
@@ -107,10 +108,6 @@ public class MenuService {
         if (dishIds.size() >= 10) {
             throw new BadRequestException(ONE_MENU_CAN_NOT_CONTAINS_OVER_20_DISHES);
         }
-
-        if (dishIds.isEmpty()) {
-            return;
-        }
     }
 
     private void checkValidDishes(List<Dish> dishes, Set<Long> dishIds) throws NotFoundException, BadRequestException {
@@ -130,14 +127,14 @@ public class MenuService {
     private void checkDuplicatedProteinTypeWithinNumberOfDays(Dish ele, int days) throws BadRequestException {
         List<Protein> proteins = proteinDAO.getProteinsFromPreviousDays(days);
         if (proteins.contains(ele.getProtein())) {
-            throw new BadRequestException("Main protein types should not be duplicated within 2 days in the lunch schedules");
+            throw new BadRequestException(MAIN_PROTEIN_TYPE_DUPLICATED_WITHIN_TWO_DAYS);
         }
     }
 
     private void checkDuplicatedMealWithinThisMonth(Dish mealInput, LocalDate menuDate) throws DuplicateException, BadRequestException {
         List<Dish> selectedMealsThisMonth = dishDao.getAllMealsSelectedWithinThisMonth(menuDate);
         if (selectedMealsThisMonth.contains(mealInput)) {
-            throw new BadRequestException(LunchScheduleExceptionMessage.mealAlreadySelectedWithinThisMonth(mealInput.getName()));
+            throw new BadRequestException(mealAlreadySelectedWithinThisMonth(mealInput.getName()));
         }
     }
 
@@ -161,6 +158,6 @@ public class MenuService {
 
     private void checkMenuAlreadyExisted(LocalDate date) throws BadRequestException {
         if (menuDAO.getMenuByDate(date) != null)
-            throw new BadRequestException(LunchScheduleExceptionMessage.menuAlreadyExisted(date));
+            throw new BadRequestException(menuAlreadyExisted(date));
     }
 }

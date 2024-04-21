@@ -19,6 +19,7 @@ This application is used for scheduling and ordering lunch in a company.
 - Postgres
 - Unit test
 - Database design
+- Sonarqube
 
 ## ERD
 ![Alt text](src/main/resources/images/company_lunch_erd.png)

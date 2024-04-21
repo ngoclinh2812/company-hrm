@@ -1,4 +1,4 @@
-package mr2.meetingroom02.dojosession.base.exception.message;
+package mr2.meetingroom02.dojosession.employee.constants;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

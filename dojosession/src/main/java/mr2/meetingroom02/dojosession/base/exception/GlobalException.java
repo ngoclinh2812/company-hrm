@@ -10,7 +10,7 @@ public abstract class GlobalException extends Exception {
 
     private ExceptionBody exceptionBody;
 
-    public GlobalException(int statusCode, String errorKey, String message) {
+    protected GlobalException(int statusCode, String errorKey, String message) {
         super(message);
         this.exceptionBody = new ExceptionBody(statusCode, errorKey, message);
     }

@@ -1,7 +1,6 @@
 package mr2.meetingroom02.dojosession.base.exception;
 
 import lombok.Getter;
-import mr2.meetingroom02.dojosession.base.exception.message.EmployeeErrorMessage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

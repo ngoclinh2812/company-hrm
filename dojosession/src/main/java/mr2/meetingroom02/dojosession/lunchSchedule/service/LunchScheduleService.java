@@ -4,22 +4,21 @@ import mr2.meetingroom02.dojosession.base.exception.BadRequestException;
 import mr2.meetingroom02.dojosession.base.exception.NotFoundException;
 import mr2.meetingroom02.dojosession.lunchOrder.dao.LunchOrderDAO;
 import mr2.meetingroom02.dojosession.lunchSchedule.dao.LunchScheduleDAO;
-import mr2.meetingroom02.dojosession.menu.dao.MenuDAO;
-import mr2.meetingroom02.dojosession.lunchSchedule.dto.*;
+import mr2.meetingroom02.dojosession.lunchSchedule.dto.CreateLunchScheduleDTO;
+import mr2.meetingroom02.dojosession.lunchSchedule.dto.LunchScheduleResponseDTO;
 import mr2.meetingroom02.dojosession.lunchSchedule.entity.LunchSchedule;
-import mr2.meetingroom02.dojosession.menu.entity.Menu;
 import mr2.meetingroom02.dojosession.lunchSchedule.mapper.LunchScheduleMapper;
+import mr2.meetingroom02.dojosession.menu.dao.MenuDAO;
 import mr2.meetingroom02.dojosession.utils.excel.ExcelExporter;
 import org.hibernate.MappingException;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
-import static mr2.meetingroom02.dojosession.base.exception.message.LunchScheduleExceptionMessage.*;
+import static mr2.meetingroom02.dojosession.lunchSchedule.constants.LunchScheduleExceptionMessage.*;
 
 @Stateless
 public class LunchScheduleService {
@@ -53,7 +52,6 @@ public class LunchScheduleService {
         if (lunchSchedule == null) {
             throw new NotFoundException(LUNCH_SCHEDULE_NOT_FOUND);
         } else {
-            List<Menu> menus = menuDAO.getAllByLunchScheduleId(lunchSchedule.getId());
             return lunchScheduleMapper.toLunchScheduleDTO(lunchSchedule);
         }
     }

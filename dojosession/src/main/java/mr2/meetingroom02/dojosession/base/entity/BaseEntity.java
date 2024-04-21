@@ -26,8 +26,4 @@ public class BaseEntity implements Serializable {
     @UpdateTimestamp
     protected LocalDateTime updatedAt;
 
-//    @Column(name = "status")
-//    @Enumerated(EnumType.STRING)
-//    protected Status status;
-
 }

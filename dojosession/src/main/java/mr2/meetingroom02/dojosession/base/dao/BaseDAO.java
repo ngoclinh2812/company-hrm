@@ -7,17 +7,15 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
 
-//@RequiredArgsConstructor
 public abstract class BaseDAO<T extends BaseEntity> {
     @PersistenceContext
     protected EntityManager entityManager;
     private final Class<T> entityClass;
 
-    public BaseDAO (Class<T> entityClass) {
+    protected BaseDAO (Class<T> entityClass) {
         this.entityClass = entityClass;
     }
 
@@ -25,7 +23,7 @@ public abstract class BaseDAO<T extends BaseEntity> {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 
         CriteriaQuery<T> q = cb.createQuery(entityClass);
-        Root<T> c = q.from(entityClass);
+        q.from(entityClass);
 
         return entityManager.createQuery(q).getResultList();
     }

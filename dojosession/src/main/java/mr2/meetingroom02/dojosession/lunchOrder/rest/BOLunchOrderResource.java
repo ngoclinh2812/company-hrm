@@ -44,9 +44,11 @@ public class BOLunchOrderResource {
     @Path("/upcoming-week/export-excel")
     @Produces({MediaType.APPLICATION_OCTET_STREAM})
     public Response ExportExcelMealsInUpcomingWeek() throws IOException, NoResultException {
+        String fileName = String.format("aavn_lunch_schedule_%s.xlsx", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+
         byte[] outputStream = lunchOrderService.exportExcelMealsInUpcomingWeek();
-        return Response.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment;filename=" + String.format("aavn_lunch_schedule_" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")) + ".xlsx"))
+        return Response.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + fileName)
                 .entity(outputStream).build();
     }
 

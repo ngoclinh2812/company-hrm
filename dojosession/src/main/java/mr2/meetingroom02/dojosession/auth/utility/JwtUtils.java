@@ -12,7 +12,7 @@ import mr2.meetingroom02.dojosession.auth.service.AuthService;
 import mr2.meetingroom02.dojosession.base.authentication.AuthenticationConfiguration;
 import mr2.meetingroom02.dojosession.base.exception.InputValidationException;
 import mr2.meetingroom02.dojosession.base.exception.AuthorizedException;
-import mr2.meetingroom02.dojosession.base.exception.message.EmployeeErrorMessage;
+import mr2.meetingroom02.dojosession.auth.constants.AuthExceptionMessages;
 import mr2.meetingroom02.dojosession.employee.entity.Employee;
 import mr2.meetingroom02.dojosession.employee.entity.RoleEnum;
 import mr2.meetingroom02.dojosession.employee.entity.StatusEnum;
@@ -82,7 +82,7 @@ public class JwtUtils {
                     .withExpiresAt(new Date(System.currentTimeMillis() + liveTime))
                     .sign(algorithm);
         } catch (JWTCreationException | IllegalArgumentException e) {
-            throw new AuthorizedException(EmployeeErrorMessage.UNAUTHORIZED_USER);
+            throw new AuthorizedException(AuthExceptionMessages.UNAUTHORIZED_USER);
         }
         return token;
     }

@@ -3,7 +3,6 @@ package mr2.meetingroom02.dojosession.menu;
 import mr2.meetingroom02.dojosession.base.exception.BadRequestException;
 import mr2.meetingroom02.dojosession.base.exception.DuplicateException;
 import mr2.meetingroom02.dojosession.base.exception.NotFoundException;
-import mr2.meetingroom02.dojosession.base.exception.message.LunchScheduleExceptionMessage;
 import mr2.meetingroom02.dojosession.dish.dao.DishDAO;
 import mr2.meetingroom02.dojosession.dish.entity.Dish;
 import mr2.meetingroom02.dojosession.lunchSchedule.dao.LunchScheduleDAO;
@@ -15,7 +14,6 @@ import mr2.meetingroom02.dojosession.menu.entity.Menu;
 import mr2.meetingroom02.dojosession.menu.service.MenuService;
 import mr2.meetingroom02.dojosession.menuDish.dao.MenuDishDAO;
 import mr2.meetingroom02.dojosession.menuDish.entity.MenuDish;
-import mr2.meetingroom02.dojosession.protein.Protein;
 import mr2.meetingroom02.dojosession.protein.ProteinDAO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,15 +22,15 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
-import static mr2.meetingroom02.dojosession.base.exception.message.DishExceptionMessage.DISH_NOT_FOUND;
-import static mr2.meetingroom02.dojosession.base.exception.message.LunchScheduleExceptionMessage.*;
+import static mr2.meetingroom02.dojosession.lunchOrder.constants.LunchOrderExceptionMessage.mealAlreadySelectedWithinThisMonth;
+import static mr2.meetingroom02.dojosession.lunchSchedule.constants.LunchScheduleExceptionMessage.*;
+import static mr2.meetingroom02.dojosession.menu.constants.MenuExceptionMessage.lunchIsNotServedInWeekend;
+import static mr2.meetingroom02.dojosession.menu.constants.MenuExceptionMessage.menuAlreadyExisted;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -165,7 +163,7 @@ public class MenuServiceTest {
                     .build(), lunchId);
         });
 
-         assertEquals(LunchScheduleExceptionMessage.mealAlreadySelectedWithinThisMonth(dishes.get(0).getName()), exception.getMessage());
+         assertEquals(mealAlreadySelectedWithinThisMonth(dishes.get(0).getName()), exception.getMessage());
     }
 
     @Test
@@ -248,7 +246,7 @@ public class MenuServiceTest {
                     .build(), lunchId);
         });
 
-         assertEquals(LunchScheduleExceptionMessage.menuAlreadyExisted(date), exception.getMessage());
+         assertEquals(menuAlreadyExisted(date), exception.getMessage());
     }
 
 }

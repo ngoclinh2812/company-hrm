@@ -18,7 +18,6 @@ public class AuthService {
 
     public boolean checkAuthentication(JwtRequest jwtRequest) throws InputValidationException {
         Employee user = employeeService.getEmployeeByEmail(jwtRequest.getEmail());
-        /*String password = decryptBase64Password(jwtRequest.getPassword());*/
         return BCrypt.checkpw(jwtRequest.getPassword(), user.getPassword());
     }
 

@@ -3,9 +3,7 @@ package mr2.meetingroom02.dojosession.base.authentication;
 import lombok.SneakyThrows;
 import mr2.meetingroom02.dojosession.auth.utility.JwtUtils;
 import mr2.meetingroom02.dojosession.base.exception.AuthorizedException;
-import mr2.meetingroom02.dojosession.base.exception.message.EmployeeErrorMessage;
 import mr2.meetingroom02.dojosession.employee.entity.RoleEnum;
-import org.apache.logging.log4j.ThreadContext;
 import org.apache.maven.wagon.authorization.AuthorizationException;
 
 import javax.annotation.Priority;

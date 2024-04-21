@@ -10,17 +10,13 @@ import mr2.meetingroom02.dojosession.employee.dto.EmployeeCreateRequestDTO;
 import mr2.meetingroom02.dojosession.employee.dto.EmployeeResponseDTO;
 import mr2.meetingroom02.dojosession.employee.dto.EmployeeUpdateRequestDTO;
 import mr2.meetingroom02.dojosession.employee.entity.Employee;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.TypedQuery;
-import javax.ws.rs.core.Response;
 import java.util.List;
 
-import static mr2.meetingroom02.dojosession.base.exception.message.DepartmentExceptionMessage.DEPARTMENT_NOT_FOUND;
-import static mr2.meetingroom02.dojosession.base.exception.message.EmployeeExceptionMessage.*;
+import static mr2.meetingroom02.dojosession.department.constants.DepartmentExceptionMessages.DEPARTMENT_NOT_FOUND;
+import static mr2.meetingroom02.dojosession.employee.constants.EmployeeExceptionMessage.*;
 
 @Stateless
 public class EmployeeService {
@@ -33,8 +29,6 @@ public class EmployeeService {
 
     @Inject
     private EmployeeMapper employeeMapper;
-
-    private static final Logger logger = LogManager.getLogger(EmployeeService.class);
 
     public List<EmployeeResponseDTO> getEmployeesByCategory(String gender, Long departmentId, Long pageNumber, Long pageSize) throws NotFoundException {
         List<Employee> employees = employeeDAO.searchEmployeesByCategory(gender, departmentId, pageNumber.intValue(), pageSize.intValue());

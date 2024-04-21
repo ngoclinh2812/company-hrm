@@ -44,7 +44,7 @@ public class DishDAO extends BaseDAO<Dish> {
                     .setParameter("startOfMonth", startOfMonth);
             return query.getResultList();
         } catch (NoResultException e) {
-            return null;
+            return List.of();
         }
     }
 

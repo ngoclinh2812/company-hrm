@@ -18,7 +18,7 @@ import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
-import static mr2.meetingroom02.dojosession.base.exception.message.DepartmentExceptionMessage.DEPARTMENT_NOT_FOUND;
+import static mr2.meetingroom02.dojosession.department.constants.DepartmentExceptionMessages.DEPARTMENT_NOT_FOUND;
 
 @Stateless
 public class EmployeeDAO extends BaseDAO<Employee> {
@@ -81,11 +81,6 @@ public class EmployeeDAO extends BaseDAO<Employee> {
         TypedQuery<Employee> query  =  entityManager.createQuery("SELECT e FROM Employee e WHERE e.email = :email", Employee.class)
                 .setParameter("email", email);
         return query.getSingleResult();
-    }
-
-    public List<Employee> getEmployeesWithNumberOfCurrentProjectLessThan(int i) {
-
-        return null;
     }
 
 }

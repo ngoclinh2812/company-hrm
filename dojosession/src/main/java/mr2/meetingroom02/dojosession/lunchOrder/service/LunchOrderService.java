@@ -3,21 +3,21 @@ package mr2.meetingroom02.dojosession.lunchOrder.service;
 import mr2.meetingroom02.dojosession.base.exception.BadRequestException;
 import mr2.meetingroom02.dojosession.base.exception.NoResultException;
 import mr2.meetingroom02.dojosession.base.exception.NotFoundException;
+import mr2.meetingroom02.dojosession.dish.dto.DishResponseDTO;
 import mr2.meetingroom02.dojosession.employee.dao.EmployeeDAO;
 import mr2.meetingroom02.dojosession.employee.entity.Employee;
 import mr2.meetingroom02.dojosession.lunchOrder.dao.LunchOrderDAO;
 import mr2.meetingroom02.dojosession.lunchOrder.dto.LunchOrderResponseDTO;
 import mr2.meetingroom02.dojosession.lunchOrder.entity.LunchOrder;
 import mr2.meetingroom02.dojosession.lunchSchedule.dao.LunchScheduleDAO;
+import mr2.meetingroom02.dojosession.lunchSchedule.dto.CreateLunchOrderRequestDTO;
 import mr2.meetingroom02.dojosession.lunchSchedule.dto.LunchScheduleResponseDTO;
 import mr2.meetingroom02.dojosession.lunchSchedule.dto.UpcomingWeekOrderDishesByDepartmentDTO;
+import mr2.meetingroom02.dojosession.lunchSchedule.entity.LunchSchedule;
 import mr2.meetingroom02.dojosession.lunchSchedule.service.LunchScheduleService;
-import mr2.meetingroom02.dojosession.menuDish.entity.MenuDish;
 import mr2.meetingroom02.dojosession.menuDish.dao.MenuDishDAO;
-import mr2.meetingroom02.dojosession.lunchSchedule.dto.CreateLunchOrderRequestDTO;
-import mr2.meetingroom02.dojosession.dish.dto.DishResponseDTO;
 import mr2.meetingroom02.dojosession.menuDish.dto.MenuDishResponseDTO;
-import mr2.meetingroom02.dojosession.lunchSchedule.entity.*;
+import mr2.meetingroom02.dojosession.menuDish.entity.MenuDish;
 import mr2.meetingroom02.dojosession.utils.excel.ExcelExporter;
 
 import javax.ejb.Stateless;
@@ -28,6 +28,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static mr2.meetingroom02.dojosession.lunchOrder.constants.LunchOrderExceptionMessage.ORDER_FOR_THIS_SCHEDULE_IS_CLOSED;
+
 
 @Stateless
 public class LunchOrderService {
@@ -132,7 +135,7 @@ public class LunchOrderService {
         LunchSchedule lunchSchedule = lunchScheduleDAO.findById(createLunchOrderRequestDTO.getLunchScheduleId())
                 .orElseThrow(() -> new NotFoundException("Lunch schedule not found"));
         if (lunchSchedule.getOrderDeadline().isBefore(LocalDate.now())) {
-            throw new BadRequestException("This lunch schedule has been closed.");
+            throw new BadRequestException(ORDER_FOR_THIS_SCHEDULE_IS_CLOSED);
         }
     }
 }

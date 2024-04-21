@@ -24,7 +24,6 @@ public class JacksonConfig implements ContextResolver<ObjectMapper> {
     private ObjectMapper createDefaultMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-        // Add any additional configuration here
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         return objectMapper;
     }

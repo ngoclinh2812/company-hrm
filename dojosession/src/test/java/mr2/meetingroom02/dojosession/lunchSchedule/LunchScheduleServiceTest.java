@@ -3,7 +3,6 @@ package mr2.meetingroom02.dojosession.lunchSchedule;
 import mr2.meetingroom02.dojosession.base.exception.BadRequestException;
 import mr2.meetingroom02.dojosession.base.exception.NotFoundException;
 import mr2.meetingroom02.dojosession.lunchSchedule.dao.LunchScheduleDAO;
-import mr2.meetingroom02.dojosession.lunchSchedule.dto.CreateLunchOrderRequestDTO;
 import mr2.meetingroom02.dojosession.lunchSchedule.dto.CreateLunchScheduleDTO;
 import mr2.meetingroom02.dojosession.lunchSchedule.dto.LunchScheduleResponseDTO;
 import mr2.meetingroom02.dojosession.lunchSchedule.entity.LunchSchedule;
@@ -20,14 +19,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
-import static mr2.meetingroom02.dojosession.base.exception.message.LunchScheduleExceptionMessage.*;
+import static mr2.meetingroom02.dojosession.lunchSchedule.constants.LunchScheduleExceptionMessage.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class LunchScheduleServiceTest {

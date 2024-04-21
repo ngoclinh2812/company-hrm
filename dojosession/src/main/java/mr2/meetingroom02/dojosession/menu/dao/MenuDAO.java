@@ -47,7 +47,7 @@ public class MenuDAO extends BaseDAO<Menu> {
             ).setParameter("date", date);
             return query.getSingleResult();
         } catch (NoResultException e) {
-            return null; // Return null when no result is found
+            return null;
         }
     }
 }
