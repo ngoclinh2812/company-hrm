@@ -1,16 +1,20 @@
 package mr2.meetingroom02.dojosession.lunchOrder.dao;
 
 import mr2.meetingroom02.dojosession.base.dao.BaseDAO;
+import mr2.meetingroom02.dojosession.employee.entity.Employee;
 import mr2.meetingroom02.dojosession.lunchOrder.entity.LunchOrder;
 import mr2.meetingroom02.dojosession.lunchSchedule.dto.UpcomingWeekOrderDishesByDepartmentDTO;
+import mr2.meetingroom02.dojosession.menu.entity.Menu;
+import mr2.meetingroom02.dojosession.menuDish.entity.MenuDish;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 @Stateless
@@ -58,4 +62,27 @@ public class LunchOrderDAO extends BaseDAO<LunchOrder> {
     }
 
 
+    public List<LunchOrder> getSelectedMenuDishesForEmployee(MenuDish menuDish, Employee employee) {
+        try {
+            CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<LunchOrder> criteriaQuery = criteriaBuilder.createQuery(LunchOrder.class);
+            Root<LunchOrder> root = criteriaQuery.from(LunchOrder.class);
+
+            Join<LunchOrder, Employee> employeeJoin = root.join("employee");
+            Join<LunchOrder, MenuDish> menuDishJoin = root.join("menuDish");
+            Join<MenuDish, Menu> menuJoin = menuDishJoin.join("menu");
+
+            criteriaQuery.select(root).distinct(true);
+            criteriaQuery.where(
+                    criteriaBuilder.equal(employeeJoin.get("email"), employee.getEmail()),
+                    criteriaBuilder.equal(menuJoin.get("menuDate"), menuDish.getMenu().getMenuDate())
+            );
+
+            TypedQuery<LunchOrder> query = entityManager.createQuery(criteriaQuery);
+            return query.getResultList();
+        } catch (NoResultException e) {
+            logger.info("MenuDishDAO - getSelectedMenuDishesForEmployee : noResultFound");
+        }
+        return List.of();
+    }
 }

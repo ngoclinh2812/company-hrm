@@ -5,7 +5,7 @@ This application is used for scheduling and ordering lunch in a company.
 ## Features
 
 - **Schedule lunch**: HR (ROLE_ADMIN in this project) can create schedule lunch. The application will make sure the meals will be as diverse as possible.
-- **View lunch schedule in upcoming week** : HR can view all the orders of employees, as well as export them into excel files
+- **View lunch orders in upcoming week** : HR can view all the orders of employees
 - **Export lunch orderings**: HR can export the upcoming lunch orders - grouped by departments, to excel files, in order to send to the kitchen.
 - **Order lunch**: All employees and HR (ROLE_USER & ROLE_ADMIN) can order lunch
 
@@ -13,11 +13,29 @@ This application is used for scheduling and ordering lunch in a company.
 - Java core
 - Java EE
 - JPA - Hibernate
-- Security
+- Authentication & Authorization flow
 - Flyway (for data migration)
 - RestAPI
 - Postgres
 - Unit test
+- Database design
+
+## ERD
+![Alt text](src/main/resources/images/company_lunch_erd.png)
+
+
+##  Business logic
+### 1. Create lunch schedule
+- Only HR (ROLE_ADMIN) can create lunch schedule
+- Lunch schedules must not overlap with each other
+- Start date must not be in the past
+- Order deadline must be before start date and is not a date in the past
+
+### 2. Create menu in lunch schedule
+
+### 3. Order lunch
+
+### 4. Export orders in upcoming week to excel file
 
 ## Prerequisites
 

@@ -22,7 +22,6 @@ import mr2.meetingroom02.dojosession.utils.excel.ExcelExporter;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.ws.rs.core.NoContentException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -72,24 +71,32 @@ public class LunchOrderService {
         Employee employee = employeeDAO.findEmployeeByEmail(employeeEmail);
         List<MenuDishResponseDTO> menuDishResponseDTOS = new ArrayList<>();
         Set<LocalDate> selectedDates = new HashSet<>();
+        List<LunchOrder> lunchOrders = new ArrayList<>();
 
         for (Long menuDishId : createLunchOrderRequestDTO.getMenuDishId()) {
             MenuDish menuDish = null;
 
             menuDish = findMenuDishById(menuDishId);
-            //TODO: validate the user to not create duplicate orders
-//                validateMenuDish(menuDish, selectedDates);
+            checkEmployeeMenuSelection(menuDish, employee);
             validateSelectedDate(menuDish, selectedDates);
-
 
             LunchOrder lunchOrder = createLunchOrderForEmployee(employee, menuDish);
             menuDishResponseDTOS.add(createMenuDishResponseDTO(lunchOrder));
-            lunchOrderDAO.insert(lunchOrder);
+            lunchOrders.add(lunchOrder);
         }
+
+        lunchOrderDAO.insertAll(lunchOrders);
 
         return LunchOrderResponseDTO.builder()
                 .menuDishes(menuDishResponseDTOS)
                 .build();
+    }
+
+    private void checkEmployeeMenuSelection(MenuDish menuDish, Employee employee) throws BadRequestException {
+        List<LunchOrder> registeredMenus = lunchOrderDAO.getSelectedMenuDishesForEmployee(menuDish, employee);
+        if (!registeredMenus.isEmpty()) {
+            throw new BadRequestException(String.format("Already register lunch on date " + menuDish.getMenu().getMenuDate().toString()));
+        }
     }
 
     private MenuDish findMenuDishById(Long menuDishId) throws NotFoundException, BadRequestException {

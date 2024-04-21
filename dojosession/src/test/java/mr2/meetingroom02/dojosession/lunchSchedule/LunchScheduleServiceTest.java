@@ -66,11 +66,10 @@ public class LunchScheduleServiceTest {
 
     @Test
     void createLunchSchedule_StartDateAfterEndDate_ThrowBadRequest() {
-        LocalDate currentDate = LocalDate.now();
         CreateLunchScheduleDTO scheduleDTO = CreateLunchScheduleDTO.builder()
-                .startDate(currentDate)
-                .endDate(currentDate.minusDays(1))
-                .orderDeadline(currentDate.minusDays(2))
+                .startDate(LocalDate.of(2024, 12, 1))
+                .endDate(LocalDate.of(2024, 11, 30))
+                .orderDeadline(LocalDate.of(2024, 11, 30))
                 .build();
 
         BadRequestException exception = assertThrows(BadRequestException.class, () -> {
@@ -100,9 +99,9 @@ public class LunchScheduleServiceTest {
     @Test
     void createLunchSchedule_OverlappingDateWithOtherSchedules_ThrowBadRequest() {
         CreateLunchScheduleDTO scheduleDTO = CreateLunchScheduleDTO.builder()
-                .startDate(LocalDate.now())
-                .endDate(LocalDate.now().plusDays(1))
-                .orderDeadline(LocalDate.now().minusDays(1))
+                .startDate(LocalDate.of(2024, 12, 2))
+                .endDate(LocalDate.of(2024, 12, 2))
+                .orderDeadline(LocalDate.of(2024, 11, 30))
                 .build();
 
         List<LunchSchedule> duplicatedSchedules = new ArrayList<>();
@@ -125,19 +124,19 @@ public class LunchScheduleServiceTest {
     @Test
     void createLunchSchedule_StartDateEqualEndDate_Successfully() throws BadRequestException {
         CreateLunchScheduleDTO lunchScheduleDTO = CreateLunchScheduleDTO.builder()
-                .startDate(LocalDate.of(2024, 4, 20))
-                .endDate(LocalDate.of(2024, 4, 20))
-                .orderDeadline(LocalDate.of(2024, 4, 19))
+                .startDate(LocalDate.of(2024, 12, 20))
+                .endDate(LocalDate.of(2024, 12, 20))
+                .orderDeadline(LocalDate.of(2024, 12, 19))
                 .build();
         LunchSchedule lunchSchedule = LunchSchedule.builder()
-                .startDate(LocalDate.of(2024, 4, 20))
-                .endDate(LocalDate.of(2024, 4, 20))
-                .orderDeadline(LocalDate.of(2024, 4, 19))
+                .startDate(LocalDate.of(2024, 12, 20))
+                .endDate(LocalDate.of(2024, 12, 20))
+                .orderDeadline(LocalDate.of(2024, 12, 19))
                 .build();
         LunchScheduleResponseDTO responseDTO = LunchScheduleResponseDTO.builder()
-                .startDate(LocalDate.of(2024, 4, 20))
-                .endDate(LocalDate.of(2024, 4, 20))
-                .orderDeadline(LocalDate.of(2024, 4, 19))
+                .startDate(LocalDate.of(2024, 12, 20))
+                .endDate(LocalDate.of(2024, 12, 20))
+                .orderDeadline(LocalDate.of(2024, 12, 19))
                 .build();
 
         when(lunchScheduleMapper.toScheduleEntity(lunchScheduleDTO)).thenReturn(lunchSchedule);
@@ -157,19 +156,19 @@ public class LunchScheduleServiceTest {
     @Test
     void createLunchSchedule_Successfully_Successfully() throws BadRequestException {
         CreateLunchScheduleDTO lunchScheduleDTO = CreateLunchScheduleDTO.builder()
-                .startDate(LocalDate.of(2024, 4, 20))
-                .endDate(LocalDate.of(2024, 4, 30))
-                .orderDeadline(LocalDate.of(2024, 4, 19))
+                .startDate(LocalDate.of(2024, 12, 20))
+                .endDate(LocalDate.of(2024, 12, 30))
+                .orderDeadline(LocalDate.of(2024, 12, 19))
                 .build();
         LunchSchedule lunchSchedule = LunchSchedule.builder()
-                .startDate(LocalDate.of(2024, 4, 20))
-                .endDate(LocalDate.of(2024, 4, 30))
-                .orderDeadline(LocalDate.of(2024, 4, 19))
+                .startDate(LocalDate.of(2024, 12, 20))
+                .endDate(LocalDate.of(2024, 12, 30))
+                .orderDeadline(LocalDate.of(2024, 12, 19))
                 .build();
         LunchScheduleResponseDTO responseDTO = LunchScheduleResponseDTO.builder()
-                .startDate(LocalDate.of(2024, 4, 20))
-                .endDate(LocalDate.of(2024, 4, 30))
-                .orderDeadline(LocalDate.of(2024, 4, 19))
+                .startDate(LocalDate.of(2024, 12, 20))
+                .endDate(LocalDate.of(2024, 12, 30))
+                .orderDeadline(LocalDate.of(2024, 12, 19))
                 .build();
 
         when(lunchScheduleMapper.toScheduleEntity(lunchScheduleDTO)).thenReturn(lunchSchedule);

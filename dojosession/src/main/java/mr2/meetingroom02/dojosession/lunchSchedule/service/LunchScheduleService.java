@@ -40,7 +40,6 @@ public class LunchScheduleService {
     private ExcelExporter excelExporter;
 
     @Transactional
-    //TODO: validate order deadline to be after the current date
     public LunchScheduleResponseDTO createLunchSchedule(CreateLunchScheduleDTO scheduleDTO)
             throws InternalError, MappingException, BadRequestException {
         checkValidDateSchedule(scheduleDTO.getStartDate(), scheduleDTO.getEndDate(), scheduleDTO.getOrderDeadline());
@@ -61,8 +60,8 @@ public class LunchScheduleService {
 
     private void checkValidDateSchedule(LocalDate startDate, LocalDate endDate, LocalDate orderDeadline) throws BadRequestException {
         if (startDate.isBefore(LocalDate.now())) throw new BadRequestException(START_DATE_IS_BEFORE_CURRENT_DATE);
-        if(orderDeadline.isBefore(LocalDate.now())) throw new BadRequestException("Order deadline is before the current date");
         if (startDate.isAfter(endDate)) throw new BadRequestException(START_DATE_IS_AFTER_END_DATE);
+        if(orderDeadline.isBefore(LocalDate.now())) throw new BadRequestException("Order deadline is before the current date");
         if(orderDeadline.isAfter(startDate) || orderDeadline.isEqual(startDate)) throw new BadRequestException(ORDER_DEADLINE_MUST_BE_BEFORE_START_DATE);
         checkOverlapSchedule(startDate, endDate);
     }

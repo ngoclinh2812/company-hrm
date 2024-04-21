@@ -35,6 +35,11 @@ public abstract class BaseDAO<T extends BaseEntity> {
         return entity;
     }
 
+    public List<T> insertAll(List<T> entities) {
+        entities.forEach(e -> entityManager.persist(e));
+        return entities;
+    }
+
     public T update(T entity) {
         entityManager.merge(entity);
         return entity;

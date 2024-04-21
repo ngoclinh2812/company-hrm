@@ -78,7 +78,6 @@ public class LunchOrderServiceTest {
         when(lunchScheduleDAO.findById(createLunchOrderRequestDTO.getLunchScheduleId())).thenReturn(Optional.ofNullable(lunchSchedule));
 
         when(createLunchOrderRequestDTO.getMenuDishId()).thenReturn(Collections.singleton(menuDishId));
-        when(lunchOrderDAO.insert(any(LunchOrder.class))).thenReturn(new LunchOrder());
 
         LunchOrderResponseDTO result = lunchOrderService.createLunchOrder(createLunchOrderRequestDTO, employeeEmail);
 
@@ -93,7 +92,7 @@ public class LunchOrderServiceTest {
         Employee employee = Employee.builder().email(employeeEmail).build();
 
         Long menuDishId = 1L;
-        Menu menu = Menu.builder().menuDate(LocalDate.of(2024, 12, 1)).build();
+        Menu menu = Menu.builder().menuDate(LocalDate.of(2024, 4, 1)).build();
         MenuDish menuDish = MenuDish.builder()
                 .dish(new Dish())
                 .menu(menu)
@@ -101,7 +100,7 @@ public class LunchOrderServiceTest {
 
         Long lunchScheduleId = 1L;
         LunchSchedule lunchSchedule = LunchSchedule.builder()
-                .startDate(LocalDate.of(2024, 4, 1))
+                .startDate(LocalDate.of(2024, 4, 2))
                 .endDate(LocalDate.of(2024, 4, 5))
                 .orderDeadline(LocalDate.of(2024, 4, 3))
                 .build();
@@ -129,7 +128,7 @@ public class LunchOrderServiceTest {
         when(employeeDAO.findEmployeeByEmail(employeeEmail)).thenReturn(Employee.builder().email(employeeEmail).build());
 
         Long menuDishId = 1L;
-        Menu menu = Menu.builder().menuDate(LocalDate.of(2024, 5, 1)).build();
+        Menu menu = Menu.builder().menuDate(LocalDate.of(2024, 12, 1)).build();
         MenuDish menuDish = MenuDish.builder()
                 .dish(new Dish())
                 .menu(menu)
@@ -138,9 +137,9 @@ public class LunchOrderServiceTest {
 
         Long lunchScheduleId = 1L;
         LunchSchedule lunchSchedule = LunchSchedule.builder()
-                .startDate(LocalDate.of(2024, 5, 1))
-                .endDate(LocalDate.of(2024, 5, 5))
-                .orderDeadline(LocalDate.of(2024, 5, 3))
+                .startDate(LocalDate.of(2024, 12, 1))
+                .endDate(LocalDate.of(2024, 12, 5))
+                .orderDeadline(LocalDate.of(2024, 12, 3))
                 .build();
         when(lunchScheduleDAO.findById(lunchScheduleId)).thenReturn(Optional.ofNullable(lunchSchedule));
 
@@ -152,8 +151,8 @@ public class LunchOrderServiceTest {
 
     @Test
     void createLunchOrder_MoreThanOneDishForAMenu() {
-        MenuDish menuDish1 = createMenuDish(LocalDate.of(2024, 4, 1));
-        MenuDish menuDish2 = createMenuDish(LocalDate.of(2024, 4, 1));
+        MenuDish menuDish1 = createMenuDish(LocalDate.of(2024, 12, 1));
+        MenuDish menuDish2 = createMenuDish(LocalDate.of(2024, 12, 1));
         Set<LocalDate> selectedDates = new HashSet<>();
 
         selectedDates.add(menuDish1.getMenu().getMenuDate());
