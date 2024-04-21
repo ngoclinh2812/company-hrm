@@ -10,11 +10,11 @@ import javax.ws.rs.core.Response;
 
 @ApplicationException
 @Getter
-public class NotFoundException extends GlobalException {
+public class NoResultException extends GlobalException {
 
-    private static final Logger logger = LogManager.getLogger(NotFoundException.class);
+    private static final Logger logger = LogManager.getLogger(NoResultException.class);
 
-    public NotFoundException(String message) {
-        super(Response.Status.NOT_FOUND.getStatusCode(), Response.Status.NOT_FOUND.getReasonPhrase(), message);
+    public NoResultException(String message) {
+        super(Response.Status.NO_CONTENT.getStatusCode(), Response.Status.NO_CONTENT.getReasonPhrase(), message);
     }
 }

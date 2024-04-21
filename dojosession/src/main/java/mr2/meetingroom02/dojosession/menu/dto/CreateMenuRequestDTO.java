@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MenuDTO implements Serializable {
+public class CreateMenuRequestDTO implements Serializable {
 
     @JsonbDateFormat("yyyy-MM-dd")
     private LocalDate date;

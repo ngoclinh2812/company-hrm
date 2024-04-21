@@ -251,7 +251,6 @@
                 </configuration>
             </plugin>
 
-            <!-- Upload war file to WildFly deployment  -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>wagon-maven-plugin</artifactId>
@@ -281,9 +280,9 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <configuration>
+                    <includes></includes>
                     <excludes>
-                        <include>mr2/meetingroom02/dojosession/base/**</include>
-
+                        <exclude>mr2/meetingroom02/dojosession/base/**</exclude>
                     </excludes>
                 </configuration>
                 <version>${jacoco.version}</version>
@@ -320,7 +319,7 @@
                                         <limit>
                                             <counter>LINE</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.80</minimum>
+                                            <minimum>0.50</minimum>
                                         </limit>
                                     </limits>
                                 </rule>

@@ -16,7 +16,6 @@ import java.util.List;
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.LowerCamelCaseStrategy.class)
 public class LunchOrderResponseDTO {
-    private Long employeeId;
 
     List<MenuDishResponseDTO> menuDishes;
 

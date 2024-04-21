@@ -1,8 +1,5 @@
 package mr2.meetingroom02.dojosession.lunchSchedule.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 
 import javax.json.bind.annotation.JsonbDateFormat;
@@ -13,9 +10,9 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-@JsonNaming(PropertyNamingStrategies.LowerCamelCaseStrategy.class)
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class CreateLunchScheduleDTO implements Serializable {
 
     @JsonbDateFormat("yyyy-MM-dd")

@@ -1,6 +1,7 @@
 package mr2.meetingroom02.dojosession.lunchOrder.service;
 
 import mr2.meetingroom02.dojosession.base.exception.BadRequestException;
+import mr2.meetingroom02.dojosession.base.exception.NoResultException;
 import mr2.meetingroom02.dojosession.base.exception.NotFoundException;
 import mr2.meetingroom02.dojosession.employee.dao.EmployeeDAO;
 import mr2.meetingroom02.dojosession.employee.entity.Employee;
@@ -21,10 +22,13 @@ import mr2.meetingroom02.dojosession.utils.excel.ExcelExporter;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.ws.rs.core.NoContentException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Stateless
 public class LunchOrderService {
@@ -51,51 +55,70 @@ public class LunchOrderService {
         return lunchOrderDAO.getNextWeekOrderList();
     }
 
-    public byte[] exportExcelMealsInUpcomingWeek() throws IOException {
+    public byte[] exportExcelMealsInUpcomingWeek() throws IOException, NoResultException {
         LunchScheduleResponseDTO lunchScheduleResponseDTO = lunchScheduleService.getLunchScheduleUpcomingWeek();
         List<UpcomingWeekOrderDishesByDepartmentDTO> upcomingWeekOrderDishesByDepartmentDTOS = lunchOrderDAO.getNextWeekOrderList();
+        if (upcomingWeekOrderDishesByDepartmentDTOS.isEmpty()) {
+            throw new NoResultException("No order for upcoming week");
+        }
         byte[] file = excelExporter.exportToExcel(upcomingWeekOrderDishesByDepartmentDTOS, lunchScheduleResponseDTO);
         return file;
     }
 
+
     public LunchOrderResponseDTO createLunchOrder(CreateLunchOrderRequestDTO createLunchOrderRequestDTO, String employeeEmail) throws NotFoundException, BadRequestException {
-
         checkLunchScheduleOrderDeadline(createLunchOrderRequestDTO);
-        
+
         Employee employee = employeeDAO.findEmployeeByEmail(employeeEmail);
-
         List<MenuDishResponseDTO> menuDishResponseDTOS = new ArrayList<>();
+        Set<LocalDate> selectedDates = new HashSet<>();
 
-        createLunchOrderRequestDTO.getMenuDishId().forEach(menuDishId -> {
+        for (Long menuDishId : createLunchOrderRequestDTO.getMenuDishId()) {
             MenuDish menuDish = null;
-            try {
-                menuDish = menuDishDao.findById(menuDishId).orElseThrow(() -> new NotFoundException("Invalid Menu Dish id"));
-            } catch (NotFoundException e) {
-                throw new RuntimeException(e);
-            }
 
-            LunchOrder lunchOrder = LunchOrder.builder()
-                    .employee(employee).
-                    menuDish(menuDish).build();
+            menuDish = findMenuDishById(menuDishId);
+            //TODO: validate the user to not create duplicate orders
+//                validateMenuDish(menuDish, selectedDates);
+            validateSelectedDate(menuDish, selectedDates);
 
+
+            LunchOrder lunchOrder = createLunchOrderForEmployee(employee, menuDish);
+            menuDishResponseDTOS.add(createMenuDishResponseDTO(lunchOrder));
             lunchOrderDAO.insert(lunchOrder);
-
-            DishResponseDTO dishResponseDto = DishResponseDTO.builder()
-                    .name(lunchOrder.getMenuDish().getDish().getName())
-                    .build();
-
-            menuDishResponseDTOS.add(MenuDishResponseDTO.builder()
-                    .menuDate(lunchOrder.getMenuDish().getMenu().getMenuDate())
-                    .dishResponseDto(dishResponseDto)
-                    .build());
-
-        });
+        }
 
         return LunchOrderResponseDTO.builder()
-                .employeeId(employee.getId())
                 .menuDishes(menuDishResponseDTOS)
                 .build();
+    }
 
+    private MenuDish findMenuDishById(Long menuDishId) throws NotFoundException, BadRequestException {
+        return menuDishDao.findById(menuDishId)
+                .orElseThrow(() -> new BadRequestException("Invalid Menu Dish id"));
+    }
+
+    private void validateSelectedDate(MenuDish menuDish, Set<LocalDate> selectedDates) throws BadRequestException {
+        if (!selectedDates.add(menuDish.getMenu().getMenuDate())) {
+            throw new BadRequestException("You can only select one menu dish per day.");
+        }
+    }
+
+    private LunchOrder createLunchOrderForEmployee(Employee employee, MenuDish menuDish) {
+        return LunchOrder.builder()
+                .employee(employee)
+                .menuDish(menuDish)
+                .build();
+    }
+
+    private MenuDishResponseDTO createMenuDishResponseDTO(LunchOrder lunchOrder) {
+        DishResponseDTO dishResponseDto = DishResponseDTO.builder()
+                .name(lunchOrder.getMenuDish().getDish().getName())
+                .build();
+
+        return MenuDishResponseDTO.builder()
+                .menuDate(lunchOrder.getMenuDish().getMenu().getMenuDate())
+                .dishResponseDto(dishResponseDto)
+                .build();
     }
 
     private void checkLunchScheduleOrderDeadline(CreateLunchOrderRequestDTO createLunchOrderRequestDTO) throws NotFoundException, BadRequestException {

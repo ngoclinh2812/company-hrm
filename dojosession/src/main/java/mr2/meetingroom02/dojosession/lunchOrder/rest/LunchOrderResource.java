@@ -38,13 +38,7 @@ public class LunchOrderResource {
     @Inject
     JwtUtils jwtUtils;
 
-    @GET
-    @Path("/upcoming-week")
-    @Produces({MediaType.APPLICATION_JSON})
-    public Response getAllMealsInUpcomingWeek() {
-        List<UpcomingWeekOrderDishesByDepartmentDTO> responseDTOs = lunchOrderService.getMealsOfEachDepartmentInUpcomingWeek();
-        return Response.ok().entity(responseDTOs).build();
-    }
+    //TODO: API - Get upcoming week orders of the authorized employee
 
     @POST
     @Produces({MediaType.APPLICATION_JSON})

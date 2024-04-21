@@ -2,6 +2,7 @@ package mr2.meetingroom02.dojosession.lunchOrder.rest;
 
 import mr2.meetingroom02.dojosession.auth.utility.JwtUtils;
 import mr2.meetingroom02.dojosession.base.exception.BadRequestException;
+import mr2.meetingroom02.dojosession.base.exception.NoResultException;
 import mr2.meetingroom02.dojosession.lunchOrder.dto.LunchOrderResponseDTO;
 import mr2.meetingroom02.dojosession.lunchOrder.service.LunchOrderService;
 import mr2.meetingroom02.dojosession.lunchSchedule.dto.CreateLunchOrderRequestDTO;
@@ -29,9 +30,6 @@ public class BOLunchOrderResource {
     LunchOrderService lunchOrderService;
 
     @Inject
-    LunchScheduleService lunchScheduleService;
-
-    @Inject
     JwtUtils jwtUtils;
 
     @GET
@@ -45,7 +43,7 @@ public class BOLunchOrderResource {
     @GET
     @Path("/upcoming-week/export-excel")
     @Produces({MediaType.APPLICATION_OCTET_STREAM})
-    public Response ExportExcelMealsInUpcomingWeek() throws IOException {
+    public Response ExportExcelMealsInUpcomingWeek() throws IOException, NoResultException {
         byte[] outputStream = lunchOrderService.exportExcelMealsInUpcomingWeek();
         return Response.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                         "attachment;filename=" + String.format("aavn_lunch_schedule_" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")) + ".xlsx"))

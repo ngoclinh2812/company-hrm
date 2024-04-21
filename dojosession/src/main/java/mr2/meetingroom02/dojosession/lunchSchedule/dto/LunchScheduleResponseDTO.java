@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
-import mr2.meetingroom02.dojosession.menu.dto.MenuDTO;
+import mr2.meetingroom02.dojosession.menu.dto.CreateMenuRequestDTO;
 
 import javax.json.bind.annotation.JsonbDateFormat;
 import java.io.Serializable;
@@ -30,7 +30,7 @@ public class LunchScheduleResponseDTO implements Serializable {
     @JsonbDateFormat("yyyy-MM-dd")
     private LocalDate endDate;
 
-    List<MenuDTO> menuList;
+    List<CreateMenuRequestDTO> menuList;
 
     @JsonbDateFormat("yyyy-MM-dd")
     private LocalDate orderDeadline;

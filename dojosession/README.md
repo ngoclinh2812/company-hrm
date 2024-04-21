@@ -4,10 +4,10 @@ This application is used for scheduling and ordering lunch in a company.
 
 ## Features
 
-- **Schedule lunch**: HR (ROLE_ADMIN in this situation) can create schedule lunch. The application will make sure the meals will be as diverse as possible.
+- **Schedule lunch**: HR (ROLE_ADMIN in this project) can create schedule lunch. The application will make sure the meals will be as diverse as possible.
+- **View lunch schedule in upcoming week** : HR can view all the orders of employees, as well as export them into excel files
 - **Export lunch orderings**: HR can export the upcoming lunch orders - grouped by departments, to excel files, in order to send to the kitchen.
-- **Order lunch**: All employees can order lunch
-- **View lunch schedule in upcoming week** : All employees and view the lunch schedule in upcoming week
+- **Order lunch**: All employees and HR (ROLE_USER & ROLE_ADMIN) can order lunch
 
 ## Technologies & Knowledge applied
 - Java core
@@ -17,6 +17,7 @@ This application is used for scheduling and ordering lunch in a company.
 - Flyway (for data migration)
 - RestAPI
 - Postgres
+- Unit test
 
 ## Prerequisites
 
